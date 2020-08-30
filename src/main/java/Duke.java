@@ -4,14 +4,13 @@ import java.util.Arrays;
 public class Duke {
     public static void main(String[] args) {
         String input;
-        int byeCheck = 1;
-        int listToggle = 1;
+        int byeIndicator = 1;
+        int listIndicator = 1;
         int listCount = 0;
-        boolean doneToggle = false;
+        boolean isDone = false;
         int i = 0;
         int j = -1;
-        String isDone = new String();
-        //String[] list = new String[100];
+        String statusIcon = new String();
         Task[] tasks = new Task[100];
 
         String logo = " ____        _        \n"
@@ -22,40 +21,33 @@ public class Duke {
         System.out.println("Hello from\n" + logo);
         System.out.println("What can I do for you?");
         Scanner scan = new Scanner(System.in);
-        while(byeCheck != 0) {
+        while(byeIndicator != 0) {
             input = scan.nextLine();
-            byeCheck = input.compareToIgnoreCase("bye");
-            listToggle = input.compareToIgnoreCase("list");
-            doneToggle = input.startsWith("done ");
-            if (byeCheck == 0) {
+            byeIndicator = input.compareToIgnoreCase("bye");
+            listIndicator = input.compareToIgnoreCase("list");
+            isDone = input.startsWith("done ");
+            if (byeIndicator == 0) {
                 System.out.println("Bye. Hope to see you again soon!");
-            }
-            else if (listToggle == 0) {
+            } else if (listIndicator == 0) {
                 System.out.println("Here are the tasks in your list:");
-                //for (i = 0; i < list.length; i++) {
                 for (i = 0; i < listCount; i++) {
-                    //if (list[i] != null) {
-                    isDone = tasks[i].getStatusIcon();
+                    statusIcon = tasks[i].getStatusIcon();
                     if (tasks[i].getDescription() != null) {
-                        //System.out.println(i + 1 + ": " + list[i]);
-                        System.out.println(i + 1 + ".[" + isDone + "] " + tasks[i].getDescription());
+                        System.out.println(i + 1 + ".[" + statusIcon + "] " + tasks[i].getDescription());
                     }
                 }
-            }
-            else if (doneToggle == true) {
+            } else if (isDone == true) {
                 int lastNrPosition = input.length();
-                String sub = input.substring(5,lastNrPosition); //start at the 6th position
+                //Starts at the 6th position
+                String sub = input.substring(5,lastNrPosition);
                 j = Integer.parseInt(sub) - 1;
+                //Assumes user does not enter a number bigger than number of items in the list
                 if (j >= 0 && j < 100) {
                     System.out.println("Nice! I've marked this task as done: ");
                     System.out.println("  [" + "\u2713" + "] " + tasks[j].getDescription());
                     tasks[j].markAsDone();
-                    j = -1;
                 }
-            }
-            else {
-                //put into list
-                //list[listCount] = input;
+            } else {
                 tasks[listCount] = new Task(input);
                 listCount++;
                 System.out.println("Added: " + input);
