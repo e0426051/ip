@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class Task {
+
     protected String description;
     protected boolean isDone;
 
@@ -14,10 +15,24 @@ public class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
+        //Returns tick or X symbol
+        return (isDone ? "\u2713" : "\u2718");
     }
 
     public void markAsDone() {
         this.isDone = true;
+    }
+
+    public String toString() {
+        return "[" + this.getStatusIcon() + "] " + this.getDescription();
+    }
+
+    public int taskType(){
+        return 0;
+    }
+
+    public String getTime(){
+        //Does nothing, meant for subclass usage
+        return null;
     }
 }
