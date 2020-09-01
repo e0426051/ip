@@ -1,0 +1,11 @@
+traditionaltask1
+done 1
+todo task2
+deadline task3 /by time1
+done 2
+done 3
+event task 4 /on time2
+list
+done 4
+list
+bye

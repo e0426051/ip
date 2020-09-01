@@ -5,3 +5,33 @@ Hello from
 | |_| | |_| |   <  __/
 |____/ \__,_|_|\_\___|
 
+What can I do for you?
+Added: traditionaltask1
+Nice! I've marked this task as done: 
+  [✓] traditionaltask1
+Got it. I've added this task: 
+  [T][✘] task2
+Now you have 2 tasks in the list.
+Got it. I've added this task: 
+  [D][✘] task3 (by: time1)
+Now you have 3 tasks in the list.
+Nice! I've marked this task as done: 
+  [T][✓] task2
+Nice! I've marked this task as done: 
+  [D][✓] task3 (by: time1)
+Got it. I've added this task: 
+  [E][✘] task 4 (on: time2)
+Now you have 4 tasks in the list.
+Here are the tasks in your list:
+1. [✓] traditionaltask1
+2. [T][✓] task2
+3. [D][✓] task3 (by: time1)
+4. [E][✘] task 4 (on: time2)
+Nice! I've marked this task as done: 
+  [E][✓] task 4 (on: time2)
+Here are the tasks in your list:
+1. [✓] traditionaltask1
+2. [T][✓] task2
+3. [D][✓] task3 (by: time1)
+4. [E][✓] task 4 (on: time2)
+Bye. Hope to see you again soon!
