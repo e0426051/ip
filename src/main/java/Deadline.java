@@ -18,7 +18,7 @@ public class Deadline extends Task {
     }
 
     @Override
-    public int taskType(){
+    public int getTaskType(){
         return 1;
     }
 }

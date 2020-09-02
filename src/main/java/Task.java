@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class Task {
 
     protected String description;
@@ -27,7 +25,7 @@ public class Task {
         return "[" + this.getStatusIcon() + "] " + this.getDescription();
     }
 
-    public int taskType(){
+    public int getTaskType(){
         return 0;
     }
 
