@@ -30,16 +30,33 @@ public class Duke {
                 displayList(listCount, tasks);
             } else if (isDone) {
                 flagAsDone(input, tasks);
+            } else if (listCount == 100) {
+                System.out.println("You have entered 100 tasks in Duke. Please reset Duke to enter new tasks.");
             } else {
-                //Assumes at most one task type is true
                 if (isDeadline) {
-                    listCount = createDeadline(input, listCount, tasks);
+                    try {
+                        listCount = createDeadline(input, listCount, tasks);
+                    } catch (InvalidFormatException | InvalidCommandException e) {
+                        e.printStackTrace();
+                    }
                 } else if (isEvent) {
-                    listCount = createEvent(input, listCount, tasks);
+                    try {
+                        listCount = createEvent(input, listCount, tasks);
+                    } catch (InvalidFormatException | InvalidCommandException e) {
+                        e.printStackTrace();
+                    }
                 } else if (isToDo) {
-                    listCount = createToDo(input, listCount, tasks);
+                    try {
+                        listCount = createToDo(input, listCount, tasks);
+                    } catch (InvalidCommandException e) {
+                        e.printStackTrace();
+                    }
                 } else {
-                    listCount = createTraditionalTask(input, listCount, tasks);
+                    try {
+                        listCount = createTraditionalTask(input, listCount, tasks);
+                    } catch (InvalidCommandException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -62,25 +79,30 @@ public class Duke {
         int EVENT = 2;
         int DEADLINE = 1;
         int TRADITIONAL_TASK = 0;
-        int j;
+        int i;
         int lastNrPosition = input.length();
-        String sub = input.substring(IS_DONE_OFFSET,lastNrPosition);
-        j = Integer.parseInt(sub) - ARRAY_OFFSET;
-        int taskType = tasks[j].getTaskType();
-        //Assumes user does not enter a number bigger than number of items in the list
-        System.out.println("Nice! I've marked this task as done: ");
-        if (taskType == TRADITIONAL_TASK) {
-            System.out.println("  [" + "\u2713" + "] " + tasks[j].getDescription());
-        } else if (taskType == DEADLINE) {
-            String temp = tasks[j].getTime();
-            System.out.println("  [D][" + "\u2713" + "] " + tasks[j].getDescription() + "(by:" + temp + ")");
-        } else if (taskType == EVENT) {
-            String temp = tasks[j].getTime();
-            System.out.println("  [E][" + "\u2713" + "] " + tasks[j].getDescription() + "(on:" + temp + ")");
-        } else if (taskType == TODO) {
-            System.out.println("  [T][" + "\u2713" + "] " + tasks[j].getDescription());
+        String sub = input.substring(IS_DONE_OFFSET, lastNrPosition);
+        i = Integer.parseInt(sub) - ARRAY_OFFSET;
+        try {
+            int taskType = tasks[i].getTaskType();
+            System.out.println("Nice! I've marked this task as done: ");
+            if (taskType == TRADITIONAL_TASK) {
+                System.out.println("  [" + "\u2713" + "] " + tasks[i].getDescription());
+            } else if (taskType == DEADLINE) {
+                String temp = tasks[i].getTime();
+                System.out.println("  [D][" + "\u2713" + "] " + tasks[i].getDescription() + "(by:" + temp + ")");
+            } else if (taskType == EVENT) {
+                String temp = tasks[i].getTime();
+                System.out.println("  [E][" + "\u2713" + "] " + tasks[i].getDescription() + "(on:" + temp + ")");
+            } else if (taskType == TODO) {
+                System.out.println("  [T][" + "\u2713" + "] " + tasks[i].getDescription());
+            }
+            tasks[i].markAsDone();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid task number. Please try again.");
+        } catch (NullPointerException e) {
+            System.out.println("Task does not exist. Please try again.");
         }
-        tasks[j].markAsDone();
     }
 
     public static void displayList(int listCount, Task[] tasks) {
@@ -94,41 +116,81 @@ public class Duke {
         }
     }
 
-    public static int createTraditionalTask(String input, int listCount, Task[] tasks) {
+    public static int createTraditionalTask(String input, int listCount, Task[] tasks) throws InvalidCommandException{
+        int checkValid = input.compareTo("");
+        if (checkValid == 0) {
+            throw new InvalidCommandException("Invalid command.");
+        }
         tasks[listCount] = new Task(input);
         listCount++;
         System.out.println("Added: " + input);
         return listCount;
     }
 
-    public static int createToDo(String input, int listCount, Task[] tasks) {
+    public static int createToDo(String input, int listCount, Task[] tasks) throws InvalidCommandException{
         int TO_DO_OFFSET = 5;
+        int checkValid = input.compareTo("todo ");
+        if (checkValid == 0) {
+            throw new InvalidCommandException("Invalid command. If you wish to create a todo with a single space as description, please enter 2 spaces.");
+        }
         String inputTaskDescription;
         inputTaskDescription = input.substring(TO_DO_OFFSET);
         tasks[listCount] = new Todo(inputTaskDescription);
         return listInput(listCount, tasks[listCount]);
     }
 
-    public static int createEvent(String input, int listCount, Task[] tasks) {
+    public static int createEvent(String input, int listCount, Task[] tasks) throws InvalidFormatException, InvalidCommandException{
+        int checkValid = input.compareTo("event ");
+        if (checkValid == 0) {
+            throw new InvalidCommandException("Invalid command. " +
+                    "If you wish to create a event with a single space as description, please enter 2 spaces.");
+        }
         int EVENT_OFFSET = 6;
         int BY_ON_OFFSET = 3;
         String on;
         String inputTaskDescription;
         int i;
         i = input.indexOf("/");
+        String checkFormat = input.substring(i, i + BY_ON_OFFSET + 1);
+        boolean isValidFormat = checkFormat.equalsIgnoreCase("/on ");
+        if (!isValidFormat) {
+            throw new InvalidFormatException("Invalid format. Please check you have entered \"/on \" properly.");
+        } else {
+            String checkDate = input.substring(i + BY_ON_OFFSET + 1);
+            boolean isEmpty = checkDate.isEmpty();
+            if (isEmpty) {
+                throw new InvalidFormatException("Invalid format. Please check you have entered a non-empty date/time.");
+            }
+        }
         inputTaskDescription = input.substring(EVENT_OFFSET, i);
         on = input.substring(i + BY_ON_OFFSET);
         tasks[listCount] = new Event(inputTaskDescription, on);
         return listInput(listCount, tasks[listCount]);
     }
 
-    public static int createDeadline(String input, int listCount, Task[] tasks) {
+    public static int createDeadline(String input, int listCount, Task[] tasks) throws InvalidFormatException, InvalidCommandException {
+        int checkValid = input.compareTo("deadline ");
+        if (checkValid == 0) {
+            throw new InvalidCommandException("Invalid command." +
+                    " If you wish to create a deadline with a single space as description, please enter 2 spaces.");
+        }
         int BY_ON_OFFSET = 3;
         int DEADLINE_OFFSET = 9;
         String by;
         String inputTaskDescription;
         int i;
         i = input.indexOf("/");
+        String checkFormat = input.substring(i, i + BY_ON_OFFSET + 1);
+        boolean isValidFormat = checkFormat.equalsIgnoreCase("/by ");
+        if (!isValidFormat) {
+            throw new InvalidFormatException("Invalid format. Please check you have entered \"/by \" properly.");
+        } else {
+            String checkDate = input.substring(i + BY_ON_OFFSET + 1);
+            boolean isEmpty = checkDate.isEmpty();
+            if (isEmpty) {
+                throw new InvalidFormatException("Invalid format. Please check you have entered a non-empty date/time.");
+            }
+        }
         inputTaskDescription = input.substring(DEADLINE_OFFSET, i);
         by = input.substring(i + BY_ON_OFFSET);
         tasks[listCount] = new Deadline(inputTaskDescription, by);
