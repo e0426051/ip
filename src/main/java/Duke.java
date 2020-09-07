@@ -31,7 +31,7 @@ public class Duke {
             } else if (isDone) {
                 flagAsDone(input, tasks);
             } else if (listCount == 100) {
-                System.out.println("You have entered 100 tasks in Duke. Please reset Duke to enter new tasks.");
+                displayMaxTaskMessage();
             } else {
                 if (isDeadline) {
                     try {
@@ -62,6 +62,10 @@ public class Duke {
         }
     }
 
+    public static void displayMaxTaskMessage() {
+        System.out.println("You have entered 100 tasks in Duke. Please reset Duke to enter new tasks.");
+    }
+
     public static void displayWelcomeMessage() {
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
@@ -73,16 +77,26 @@ public class Duke {
     }
 
     public static void flagAsDone(String input, Task[] tasks) {
-        int IS_DONE_OFFSET = 5;
-        int ARRAY_OFFSET = 1;
-        int TODO = 3;
-        int EVENT = 2;
-        int DEADLINE = 1;
-        int TRADITIONAL_TASK = 0;
+        final int IS_DONE_OFFSET = 5;
+        final int ARRAY_OFFSET = 1;
+        final int TODO = 3;
+        final int EVENT = 2;
+        final int DEADLINE = 1;
+        //Traditional tasks are tasks specified in Level-2
+        final int TRADITIONAL_TASK = 0;
         int i;
         int lastNrPosition = input.length();
         String sub = input.substring(IS_DONE_OFFSET, lastNrPosition);
         i = Integer.parseInt(sub) - ARRAY_OFFSET;
+        try {
+            boolean alreadyDone = tasks[i].getStatus();
+            if (alreadyDone == true) {
+                System.out.println("This task is already done!");
+                return;
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+            //Does not show message since the function will continue to run to the bottom
+        }
         try {
             int taskType = tasks[i].getTaskType();
             System.out.println("Nice! I've marked this task as done: ");
@@ -106,7 +120,7 @@ public class Duke {
     }
 
     public static void displayList(int listCount, Task[] tasks) {
-        int ARRAY_OFFSET = 1;
+        final int ARRAY_OFFSET = 1;
         int i;
         System.out.println("Here are the tasks in your list:");
         for (i = 0; i < listCount; i++) {
@@ -116,7 +130,9 @@ public class Duke {
         }
     }
 
-    public static int createTraditionalTask(String input, int listCount, Task[] tasks) throws InvalidCommandException{
+    public static int createTraditionalTask(String input, int listCount, Task[] tasks)
+            throws InvalidCommandException {
+        //Accepts "todo", "deadline" and "event" without spaces as traditional tasks.
         int checkValid = input.compareTo("");
         if (checkValid == 0) {
             throw new InvalidCommandException("Invalid command.");
@@ -127,11 +143,14 @@ public class Duke {
         return listCount;
     }
 
-    public static int createToDo(String input, int listCount, Task[] tasks) throws InvalidCommandException{
-        int TO_DO_OFFSET = 5;
+    public static int createToDo(String input, int listCount, Task[] tasks)
+            throws InvalidCommandException {
+        final int TO_DO_OFFSET = 5;
         int checkValid = input.compareTo("todo ");
         if (checkValid == 0) {
-            throw new InvalidCommandException("Invalid command. If you wish to create a todo with a single space as description, please enter 2 spaces.");
+            throw new InvalidCommandException("Invalid command. " +
+                    "If you wish to create a todo with a single space as description, " +
+                    "please enter 2 spaces.");
         }
         String inputTaskDescription;
         inputTaskDescription = input.substring(TO_DO_OFFSET);
@@ -139,27 +158,48 @@ public class Duke {
         return listInput(listCount, tasks[listCount]);
     }
 
-    public static int createEvent(String input, int listCount, Task[] tasks) throws InvalidFormatException, InvalidCommandException{
+    public static int createEvent(String input, int listCount, Task[] tasks)
+            throws InvalidFormatException, InvalidCommandException {
+        final int INVALID = 0;
         int checkValid = input.compareTo("event ");
-        if (checkValid == 0) {
+        if (checkValid == INVALID) {
             throw new InvalidCommandException("Invalid command. " +
-                    "If you wish to create a event with a single space as description, please enter 2 spaces.");
+                    "If you wish to create a event with a single space as description, " +
+                    "please enter 2 spaces.");
         }
-        int EVENT_OFFSET = 6;
-        int BY_ON_OFFSET = 3;
+        final int EVENT_OFFSET = 6;
+        final int BY_ON_OFFSET = 3;
+        final int SLASH_ON_SPACE_OFFSET = 4;
+        final int SLASH_NOT_FOUND = -1;
+        final String INVALID_INPUT = "INV";
         String on;
         String inputTaskDescription;
         int i;
         i = input.indexOf("/");
-        String checkFormat = input.substring(i, i + BY_ON_OFFSET + 1);
-        boolean isValidFormat = checkFormat.equalsIgnoreCase("/on ");
-        if (!isValidFormat) {
-            throw new InvalidFormatException("Invalid format. Please check you have entered \"/on \" properly.");
+        String checkMinInputFormat;
+        if (i != SLASH_NOT_FOUND) {
+            checkMinInputFormat = input.substring(i);
+        } else {
+            checkMinInputFormat = INVALID_INPUT;
+        }
+        boolean isValidFormat;
+        if (checkMinInputFormat.length() >= SLASH_ON_SPACE_OFFSET) {
+            String checkFormat = input.substring(i, i + BY_ON_OFFSET + 1);
+            isValidFormat = checkFormat.equalsIgnoreCase("/on ");
+        } else {
+            isValidFormat = false;
+        }
+        if (i == EVENT_OFFSET) {
+            throw new InvalidFormatException("Invalid format. Event cannot be empty.");
+        } else if (!isValidFormat) {
+            throw new InvalidFormatException("Invalid format. " +
+                    "Please check you have entered \"/on \" properly.");
         } else {
             String checkDate = input.substring(i + BY_ON_OFFSET + 1);
             boolean isEmpty = checkDate.isEmpty();
             if (isEmpty) {
-                throw new InvalidFormatException("Invalid format. Please check you have entered a non-empty date/time.");
+                throw new InvalidFormatException("Invalid format. " +
+                        "Please check you have entered a non-empty date/time.");
             }
         }
         inputTaskDescription = input.substring(EVENT_OFFSET, i);
@@ -168,27 +208,48 @@ public class Duke {
         return listInput(listCount, tasks[listCount]);
     }
 
-    public static int createDeadline(String input, int listCount, Task[] tasks) throws InvalidFormatException, InvalidCommandException {
+    public static int createDeadline(String input, int listCount, Task[] tasks)
+            throws InvalidFormatException, InvalidCommandException {
+        final int INVALID = 0;
         int checkValid = input.compareTo("deadline ");
-        if (checkValid == 0) {
+        if (checkValid == INVALID) {
             throw new InvalidCommandException("Invalid command." +
-                    " If you wish to create a deadline with a single space as description, please enter 2 spaces.");
+                    " If you wish to create a deadline with a single space as description, " +
+                    "please enter 2 spaces.");
         }
-        int BY_ON_OFFSET = 3;
-        int DEADLINE_OFFSET = 9;
+        final int BY_ON_OFFSET = 3;
+        final int DEADLINE_OFFSET = 9;
+        final int SLASH_BY_SPACE_OFFSET = 4;
+        final int SLASH_NOT_FOUND = -1;
+        final String INVALID_INPUT = "INV";
         String by;
         String inputTaskDescription;
         int i;
         i = input.indexOf("/");
-        String checkFormat = input.substring(i, i + BY_ON_OFFSET + 1);
-        boolean isValidFormat = checkFormat.equalsIgnoreCase("/by ");
-        if (!isValidFormat) {
-            throw new InvalidFormatException("Invalid format. Please check you have entered \"/by \" properly.");
+        String checkMinInputFormat;
+        if (i != SLASH_NOT_FOUND) {
+            checkMinInputFormat = input.substring(i);
+        } else {
+            checkMinInputFormat = INVALID_INPUT;
+        }
+        boolean isValidFormat;
+        if (checkMinInputFormat.length() >= SLASH_BY_SPACE_OFFSET) {
+            String checkFormat = input.substring(i, i + BY_ON_OFFSET + 1);
+            isValidFormat = checkFormat.equalsIgnoreCase("/by ");
+        } else {
+            isValidFormat = false;
+        }
+        if (i == DEADLINE_OFFSET) {
+            throw new InvalidFormatException("Invalid format. Deadline cannot be empty.");
+        } else if (!isValidFormat) {
+            throw new InvalidFormatException("Invalid format. " +
+                    "Please check you have entered \"/by \" properly.");
         } else {
             String checkDate = input.substring(i + BY_ON_OFFSET + 1);
             boolean isEmpty = checkDate.isEmpty();
             if (isEmpty) {
-                throw new InvalidFormatException("Invalid format. Please check you have entered a non-empty date/time.");
+                throw new InvalidFormatException("Invalid format. " +
+                        "Please check you have entered a non-empty date/time.");
             }
         }
         inputTaskDescription = input.substring(DEADLINE_OFFSET, i);

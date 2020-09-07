@@ -8,13 +8,17 @@ public class Task {
         this.isDone = false;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
     public String getStatusIcon() {
         //Returns tick or X symbol
         return (isDone ? "\u2713" : "\u2718");
+    }
+
+    public boolean getStatus(){
+        return (isDone);
     }
 
     public void markAsDone() {
@@ -29,7 +33,7 @@ public class Task {
         return 0;
     }
 
-    public String getTime(){
+    public String getTime() {
         //Does nothing, meant for subclass usage
         return null;
     }

@@ -10,7 +10,7 @@ public class Todo extends Task {
     }
 
     @Override
-    public int getTaskType(){
+    public int getTaskType() {
         return 3;
     }
 }
