@@ -8,7 +8,7 @@ public class Event extends Task {
     }
 
     @Override
-    public String getTime(){
+    public String getTime() {
         return this.on;
     }
 
@@ -18,7 +18,7 @@ public class Event extends Task {
     }
 
     @Override
-    public int getTaskType(){
+    public int getTaskType() {
         return 2;
     }
 }

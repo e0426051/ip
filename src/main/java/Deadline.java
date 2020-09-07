@@ -8,7 +8,7 @@ public class Deadline extends Task {
     }
 
     @Override
-    public String getTime(){
+    public String getTime() {
         return this.by;
     }
 
@@ -18,7 +18,7 @@ public class Deadline extends Task {
     }
 
     @Override
-    public int getTaskType(){
+    public int getTaskType() {
         return 1;
     }
 }
