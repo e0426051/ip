@@ -1,3 +1,10 @@
+import Exceptions.InvalidCommandException;
+import Exceptions.InvalidFormatException;
+import Tasks.Deadline;
+import Tasks.Event;
+import Tasks.Task;
+import Tasks.Todo;
+
 import java.util.Scanner;
 
 public class Duke {
@@ -84,18 +91,21 @@ public class Duke {
         final int DEADLINE = 1;
         //Traditional tasks are tasks specified in Level-2
         final int TRADITIONAL_TASK = 0;
-        int i;
+        int i = 0;
         int lastNrPosition = input.length();
         String sub = input.substring(IS_DONE_OFFSET, lastNrPosition);
-        i = Integer.parseInt(sub) - ARRAY_OFFSET;
         try {
+            i = Integer.parseInt(sub) - ARRAY_OFFSET;
             boolean alreadyDone = tasks[i].getStatus();
-            if (alreadyDone == true) {
+            if (alreadyDone) {
                 System.out.println("This task is already done!");
                 return;
             }
         } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             //Does not show message since the function will continue to run to the bottom
+        } catch (NumberFormatException e) {
+            System.out.println("Please Enter a number!");
+            return;
         }
         try {
             int taskType = tasks[i].getTaskType();
