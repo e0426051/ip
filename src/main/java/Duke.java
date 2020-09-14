@@ -5,6 +5,7 @@ import Tasks.Event;
 import Tasks.Task;
 import Tasks.Todo;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Duke {
@@ -19,7 +20,8 @@ public class Duke {
         boolean isToDo;
         final int PRESENT = 0;
 
-        Task[] tasks = new Task[100];
+        //Task[] tasks = new Task[100];
+        ArrayList<Task> tasks = new ArrayList<>();
 
         displayWelcomeMessage();
         Scanner scan = new Scanner(System.in);
@@ -37,8 +39,6 @@ public class Duke {
                 displayList(listCount, tasks);
             } else if (isDone) {
                 flagAsDone(input, tasks);
-            } else if (listCount == 100) {
-                displayMaxTaskMessage();
             } else {
                 if (isDeadline) {
                     try {
@@ -69,10 +69,6 @@ public class Duke {
         }
     }
 
-    public static void displayMaxTaskMessage() {
-        System.out.println("You have entered 100 tasks in Duke. Please reset Duke to enter new tasks.");
-    }
-
     public static void displayWelcomeMessage() {
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
@@ -83,7 +79,7 @@ public class Duke {
         System.out.println("What can I do for you?");
     }
 
-    public static void flagAsDone(String input, Task[] tasks) {
+    public static void flagAsDone(String input, ArrayList<Task> tasks) {
         final int IS_DONE_OFFSET = 5;
         final int ARRAY_OFFSET = 1;
         final int TODO = 3;
@@ -96,64 +92,63 @@ public class Duke {
         String sub = input.substring(IS_DONE_OFFSET, lastNrPosition);
         try {
             i = Integer.parseInt(sub) - ARRAY_OFFSET;
-            boolean alreadyDone = tasks[i].getStatus();
+            boolean alreadyDone = tasks.get(i).getStatus();
             if (alreadyDone) {
                 System.out.println("This task is already done!");
                 return;
             }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+        } catch (IndexOutOfBoundsException e) {
             //Does not show message since the function will continue to run to the bottom
         } catch (NumberFormatException e) {
             System.out.println("Please Enter a number!");
             return;
         }
         try {
-            int taskType = tasks[i].getTaskType();
+            int taskType = tasks.get(i).getTaskType();
             System.out.println("Nice! I've marked this task as done: ");
             if (taskType == TRADITIONAL_TASK) {
-                System.out.println("  [" + "\u2713" + "] " + tasks[i].getDescription());
+                System.out.println("  [" + "\u2713" + "] " + tasks.get(i).getDescription());
             } else if (taskType == DEADLINE) {
-                String temp = tasks[i].getTime();
-                System.out.println("  [D][" + "\u2713" + "] " + tasks[i].getDescription() + "(by:" + temp + ")");
+                String temp = tasks.get(i).getTime();
+                System.out.println("  [D][" + "\u2713" + "] " + tasks.get(i).getDescription() + "(by:" + temp + ")");
             } else if (taskType == EVENT) {
-                String temp = tasks[i].getTime();
-                System.out.println("  [E][" + "\u2713" + "] " + tasks[i].getDescription() + "(on:" + temp + ")");
+                String temp = tasks.get(i).getTime();
+                System.out.println("  [E][" + "\u2713" + "] " + tasks.get(i).getDescription() + "(on:" + temp + ")");
             } else if (taskType == TODO) {
-                System.out.println("  [T][" + "\u2713" + "] " + tasks[i].getDescription());
+                System.out.println("  [T][" + "\u2713" + "] " + tasks.get(i).getDescription());
             }
-            tasks[i].markAsDone();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Invalid task number. Please try again.");
-        } catch (NullPointerException e) {
-            System.out.println("Task does not exist. Please try again.");
+            tasks.get(i).markAsDone();
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Invalid task number or task does not exist. Please try again.");
         }
     }
 
-    public static void displayList(int listCount, Task[] tasks) {
+    public static void displayList(int listCount, ArrayList<Task> tasks) {
         final int ARRAY_OFFSET = 1;
         int i;
         System.out.println("Here are the tasks in your list:");
         for (i = 0; i < listCount; i++) {
-            if (tasks[i].getDescription() != null) {
-                System.out.println(i + ARRAY_OFFSET + ". " + tasks[i].toString());
+            if (tasks.get(i).getDescription() != null) {
+                System.out.println(i + ARRAY_OFFSET + ". " + tasks.get(i).toString());
             }
         }
     }
 
-    public static int createTraditionalTask(String input, int listCount, Task[] tasks)
+    public static int createTraditionalTask(String input, int listCount, ArrayList<Task> tasks)
             throws InvalidCommandException {
         //Accepts "todo", "deadline" and "event" without spaces as traditional tasks.
         int checkValid = input.compareTo("");
         if (checkValid == 0) {
             throw new InvalidCommandException("Invalid command.");
         }
-        tasks[listCount] = new Task(input);
+        //tasks[listCount] = new Task(input);
+        tasks.add(listCount, new Task(input));
         listCount++;
         System.out.println("Added: " + input);
         return listCount;
     }
 
-    public static int createToDo(String input, int listCount, Task[] tasks)
+    public static int createToDo(String input, int listCount, ArrayList<Task> tasks)
             throws InvalidCommandException {
         final int TO_DO_OFFSET = 5;
         int checkValid = input.compareTo("todo ");
@@ -164,11 +159,12 @@ public class Duke {
         }
         String inputTaskDescription;
         inputTaskDescription = input.substring(TO_DO_OFFSET);
-        tasks[listCount] = new Todo(inputTaskDescription);
-        return listInput(listCount, tasks[listCount]);
+        //tasks[listCount] = new Todo(inputTaskDescription);
+        tasks.add(listCount, new Todo(inputTaskDescription));
+        return listInput(listCount, tasks.get(listCount));
     }
 
-    public static int createEvent(String input, int listCount, Task[] tasks)
+    public static int createEvent(String input, int listCount, ArrayList<Task> tasks)
             throws InvalidFormatException, InvalidCommandException {
         final int INVALID = 0;
         int checkValid = input.compareTo("event ");
@@ -214,11 +210,12 @@ public class Duke {
         }
         inputTaskDescription = input.substring(EVENT_OFFSET, i);
         on = input.substring(i + BY_ON_OFFSET);
-        tasks[listCount] = new Event(inputTaskDescription, on);
-        return listInput(listCount, tasks[listCount]);
+        //tasks[listCount] = new Event(inputTaskDescription, on);
+        tasks.add(listCount, new Event(inputTaskDescription, on));
+        return listInput(listCount, tasks.get(listCount));
     }
 
-    public static int createDeadline(String input, int listCount, Task[] tasks)
+    public static int createDeadline(String input, int listCount, ArrayList<Task> tasks)
             throws InvalidFormatException, InvalidCommandException {
         final int INVALID = 0;
         int checkValid = input.compareTo("deadline ");
@@ -264,8 +261,9 @@ public class Duke {
         }
         inputTaskDescription = input.substring(DEADLINE_OFFSET, i);
         by = input.substring(i + BY_ON_OFFSET);
-        tasks[listCount] = new Deadline(inputTaskDescription, by);
-        return listInput(listCount, tasks[listCount]);
+        //tasks[listCount] = new Deadline(inputTaskDescription, by);
+        tasks.add(listCount, new Deadline(inputTaskDescription, by));
+        return listInput(listCount, tasks.get(listCount));
     }
 
     public static int listInput(int listCount, Task task) {
