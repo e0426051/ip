@@ -217,7 +217,7 @@ public class Duke {
         inputTaskDescription = input.substring(TO_DO_OFFSET);
         tasks.add(listCount, new Todo(inputTaskDescription));
         if (!initialize) {
-            updateFile("TD " + "|" + inputTaskDescription);
+            updateFile(input);
         }
         return listInput(listCount, tasks.get(listCount));
     }
@@ -270,7 +270,7 @@ public class Duke {
         on = input.substring(i + BY_ON_OFFSET);
         tasks.add(listCount, new Event(inputTaskDescription, on));
         if (!initialize) {
-            updateFile("EV " + "|" + inputTaskDescription + "|" + on);
+            updateFile(input);
         }
         return listInput(listCount, tasks.get(listCount));
     }
@@ -323,7 +323,7 @@ public class Duke {
         by = input.substring(i + BY_ON_OFFSET);
         tasks.add(listCount, new Deadline(inputTaskDescription, by));
         if (!initialize) {
-            updateFile("DL " + "|" + inputTaskDescription + "|" + by);
+            updateFile(input);
         }
         return listInput(listCount, tasks.get(listCount));
     }
@@ -357,6 +357,9 @@ public class Duke {
         }
         //empties current file so to support "deletion"
         //DANGEROUS IMPLEMENTATION. If "bye" not ran on runtime ALL DATA LOST. TO FIX.
+        //If no clear, then tasks pile up. However, if clear, then previous tasks not deleted will
+        //be missing. To FIX.
+        //TODO implement support for DONE.
         try {
             FileWriter clearCurrentFile = new FileWriter("./duke.txt");
             clearCurrentFile.close();
