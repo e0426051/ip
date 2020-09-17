@@ -345,7 +345,9 @@ public class Duke {
 
     //Does not save the done status. Does not support delete.
     public static int fetchFile(int listCount, ArrayList<Task> tasks){
+        createFile(new File("./duke.txt"));
         File f = new File("./duke.txt");
+        //f = new File("./duke.txt");
         Scanner sc = null;
         String temp;
         try {
@@ -419,4 +421,18 @@ public class Duke {
         }
     }
 
+    public static void createFile(File duke) {
+        try {
+            if (duke.exists()) {
+                System.out.println("duke.txt exists");
+                return;
+            }
+            if (!duke.getParentFile().exists()) {
+                duke.getParentFile().mkdirs();
+            }
+            duke.createNewFile();
+        } catch (IOException e) {
+            System.out.println("Unable to create file; reason: " + e.getMessage());
+        }
+    }
 }
