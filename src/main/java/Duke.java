@@ -18,6 +18,7 @@ public class Duke {
         boolean isEvent;
         boolean isDeadline;
         boolean isToDo;
+        boolean isDelete;
         final int PRESENT = 0;
 
         //Task[] tasks = new Task[100];
@@ -33,12 +34,15 @@ public class Duke {
             isDeadline = input.startsWith("deadline ");
             isEvent = input.startsWith("event ");
             isToDo = input.startsWith("todo ");
+            isDelete = input.startsWith("delete ");
             if (byeIndicator == PRESENT) {
                 displayByeMessage();
             } else if (listIndicator == PRESENT) {
                 displayList(listCount, tasks);
             } else if (isDone) {
                 flagAsDone(input, tasks);
+            } else if (isDelete) {
+                listCount = deleteTask(input, tasks, listCount);
             } else {
                 if (isDeadline) {
                     try {
@@ -77,6 +81,51 @@ public class Duke {
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Hello from\n" + logo);
         System.out.println("What can I do for you?");
+    }
+
+    public static int deleteTask(String input, ArrayList<Task> tasks, int listCount) {
+        final int DELETE_OFFSET = 7;
+        final int ARRAY_OFFSET = 1;
+        final int TODO = 3;
+        final int EVENT = 2;
+        final int DEADLINE = 1;
+        //Traditional tasks are tasks specified in Level-2
+        final int TRADITIONAL_TASK = 0;
+        int lastNrPosition = input.length();
+        String sub = input.substring(DELETE_OFFSET, lastNrPosition);
+        int i = 0;
+        String status;
+
+        try {
+            i = Integer.parseInt(sub) - ARRAY_OFFSET;
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Invalid task number. No items are deleted.");
+        } catch (NumberFormatException e) {
+            System.out.println("Please enter a number!");
+        }
+        try {
+            int taskType = tasks.get(i).getTaskType();
+            status = tasks.get(i).getStatusIcon();
+            System.out.println("Noted. I've removed this task: ");
+            if (taskType == TRADITIONAL_TASK) {
+                System.out.println("  [" + status + "] " + tasks.get(i).getDescription());
+            } else if (taskType == DEADLINE) {
+                String temp = tasks.get(i).getTime();
+                System.out.println("  [D][" + status + "] " + tasks.get(i).getDescription() + "(by:" + temp + ")");
+            } else if (taskType == EVENT) {
+                String temp = tasks.get(i).getTime();
+                System.out.println("  [E][" + status + "] " + tasks.get(i).getDescription() + "(on:" + temp + ")");
+            } else if (taskType == TODO) {
+                System.out.println("  [T][" + status + "] " + tasks.get(i).getDescription());
+            }
+            tasks.remove(i);
+            listCount--;
+            return listCount;
+        }
+        catch (IndexOutOfBoundsException e) {
+            System.out.println("Invalid task number. No items are deleted.");
+        }
+        return listCount;
     }
 
     public static void flagAsDone(String input, ArrayList<Task> tasks) {
@@ -141,7 +190,6 @@ public class Duke {
         if (checkValid == 0) {
             throw new InvalidCommandException("Invalid command.");
         }
-        //tasks[listCount] = new Task(input);
         tasks.add(listCount, new Task(input));
         listCount++;
         System.out.println("Added: " + input);
@@ -159,7 +207,6 @@ public class Duke {
         }
         String inputTaskDescription;
         inputTaskDescription = input.substring(TO_DO_OFFSET);
-        //tasks[listCount] = new Todo(inputTaskDescription);
         tasks.add(listCount, new Todo(inputTaskDescription));
         return listInput(listCount, tasks.get(listCount));
     }
@@ -210,7 +257,6 @@ public class Duke {
         }
         inputTaskDescription = input.substring(EVENT_OFFSET, i);
         on = input.substring(i + BY_ON_OFFSET);
-        //tasks[listCount] = new Event(inputTaskDescription, on);
         tasks.add(listCount, new Event(inputTaskDescription, on));
         return listInput(listCount, tasks.get(listCount));
     }
@@ -261,7 +307,6 @@ public class Duke {
         }
         inputTaskDescription = input.substring(DEADLINE_OFFSET, i);
         by = input.substring(i + BY_ON_OFFSET);
-        //tasks[listCount] = new Deadline(inputTaskDescription, by);
         tasks.add(listCount, new Deadline(inputTaskDescription, by));
         return listInput(listCount, tasks.get(listCount));
     }
