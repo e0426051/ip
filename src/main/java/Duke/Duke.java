@@ -1,9 +1,11 @@
-import Exceptions.InvalidCommandException;
-import Exceptions.InvalidFormatException;
-import Tasks.Deadline;
-import Tasks.Event;
-import Tasks.Task;
-import Tasks.Todo;
+package Duke;
+
+import Duke.Exceptions.InvalidCommandException;
+import Duke.Exceptions.InvalidFormatException;
+import Duke.Tasks.Deadline;
+import Duke.Tasks.Event;
+import Duke.Tasks.Task;
+import Duke.Tasks.Todo;
 
 import java.io.BufferedWriter;
 import java.io.File;
