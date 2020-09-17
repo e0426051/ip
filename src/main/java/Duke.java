@@ -5,6 +5,11 @@ import Tasks.Event;
 import Tasks.Task;
 import Tasks.Todo;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -21,8 +26,9 @@ public class Duke {
         boolean isDelete;
         final int PRESENT = 0;
 
-        //Task[] tasks = new Task[100];
         ArrayList<Task> tasks = new ArrayList<>();
+
+        listCount = fetchFile(listCount, tasks);
 
         displayWelcomeMessage();
         Scanner scan = new Scanner(System.in);
@@ -46,25 +52,25 @@ public class Duke {
             } else {
                 if (isDeadline) {
                     try {
-                        listCount = createDeadline(input, listCount, tasks);
+                        listCount = createDeadline(input, listCount, tasks, false);
                     } catch (InvalidFormatException | InvalidCommandException e) {
                         e.printStackTrace();
                     }
                 } else if (isEvent) {
                     try {
-                        listCount = createEvent(input, listCount, tasks);
+                        listCount = createEvent(input, listCount, tasks, false);
                     } catch (InvalidFormatException | InvalidCommandException e) {
                         e.printStackTrace();
                     }
                 } else if (isToDo) {
                     try {
-                        listCount = createToDo(input, listCount, tasks);
+                        listCount = createToDo(input, listCount, tasks, false);
                     } catch (InvalidCommandException e) {
                         e.printStackTrace();
                     }
                 } else {
                     try {
-                        listCount = createTraditionalTask(input, listCount, tasks);
+                        listCount = createTraditionalTask(input, listCount, tasks, false);
                     } catch (InvalidCommandException e) {
                         e.printStackTrace();
                     }
@@ -134,7 +140,6 @@ public class Duke {
         final int TODO = 3;
         final int EVENT = 2;
         final int DEADLINE = 1;
-        //Traditional tasks are tasks specified in Level-2
         final int TRADITIONAL_TASK = 0;
         int i = 0;
         int lastNrPosition = input.length();
@@ -183,7 +188,7 @@ public class Duke {
         }
     }
 
-    public static int createTraditionalTask(String input, int listCount, ArrayList<Task> tasks)
+    public static int createTraditionalTask(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidCommandException {
         //Accepts "todo", "deadline" and "event" without spaces as traditional tasks.
         int checkValid = input.compareTo("");
@@ -193,10 +198,13 @@ public class Duke {
         tasks.add(listCount, new Task(input));
         listCount++;
         System.out.println("Added: " + input);
+        if (!initialize) {
+            updateFile(input);
+        }
         return listCount;
     }
 
-    public static int createToDo(String input, int listCount, ArrayList<Task> tasks)
+    public static int createToDo(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidCommandException {
         final int TO_DO_OFFSET = 5;
         int checkValid = input.compareTo("todo ");
@@ -208,10 +216,13 @@ public class Duke {
         String inputTaskDescription;
         inputTaskDescription = input.substring(TO_DO_OFFSET);
         tasks.add(listCount, new Todo(inputTaskDescription));
+        if (!initialize) {
+            updateFile("TD " + "|" + inputTaskDescription);
+        }
         return listInput(listCount, tasks.get(listCount));
     }
 
-    public static int createEvent(String input, int listCount, ArrayList<Task> tasks)
+    public static int createEvent(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidFormatException, InvalidCommandException {
         final int INVALID = 0;
         int checkValid = input.compareTo("event ");
@@ -258,10 +269,13 @@ public class Duke {
         inputTaskDescription = input.substring(EVENT_OFFSET, i);
         on = input.substring(i + BY_ON_OFFSET);
         tasks.add(listCount, new Event(inputTaskDescription, on));
+        if (!initialize) {
+            updateFile("EV " + "|" + inputTaskDescription + "|" + on);
+        }
         return listInput(listCount, tasks.get(listCount));
     }
 
-    public static int createDeadline(String input, int listCount, ArrayList<Task> tasks)
+    public static int createDeadline(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidFormatException, InvalidCommandException {
         final int INVALID = 0;
         int checkValid = input.compareTo("deadline ");
@@ -308,6 +322,9 @@ public class Duke {
         inputTaskDescription = input.substring(DEADLINE_OFFSET, i);
         by = input.substring(i + BY_ON_OFFSET);
         tasks.add(listCount, new Deadline(inputTaskDescription, by));
+        if (!initialize) {
+            updateFile("DL " + "|" + inputTaskDescription + "|" + by);
+        }
         return listInput(listCount, tasks.get(listCount));
     }
 
@@ -322,4 +339,79 @@ public class Duke {
     public static void displayByeMessage() {
         System.out.println("Bye. Hope to see you again soon!");
     }
+
+
+    //Does not save the done status. Does not support delete.
+    public static int fetchFile(int listCount, ArrayList<Task> tasks){
+        File f = new File("./duke.txt");
+        Scanner sc = null;
+        String temp;
+        try {
+            sc = new Scanner(f);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        }
+        while (sc.hasNextLine()) {
+            temp = sc.nextLine();
+            listCount = loadFile(temp, listCount, tasks);
+        }
+        //empties current file so to support "deletion"
+        //DANGEROUS IMPLEMENTATION. If "bye" not ran on runtime ALL DATA LOST. TO FIX.
+        try {
+            FileWriter clearCurrentFile = new FileWriter("./duke.txt");
+            clearCurrentFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return listCount;
+    }
+
+    public static int loadFile(String input, int listCount, ArrayList<Task> tasks){
+        boolean isDeadline;
+        boolean isEvent;
+        boolean isToDo;
+
+        isDeadline = input.startsWith("deadline ");
+        isEvent = input.startsWith("event ");
+        isToDo = input.startsWith("todo ");
+        if (isDeadline) {
+            try {
+                listCount = createDeadline(input, listCount, tasks, true);
+            } catch (InvalidFormatException | InvalidCommandException e) {
+                e.printStackTrace();
+            }
+        } else if (isEvent) {
+            try {
+                listCount = createEvent(input, listCount, tasks, true);
+            } catch (InvalidFormatException | InvalidCommandException e) {
+                e.printStackTrace();
+            }
+        } else if (isToDo) {
+            try{
+                listCount = createToDo(input, listCount, tasks, true);
+            } catch (InvalidCommandException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try{
+                listCount = createTraditionalTask(input, listCount, tasks, true);
+            } catch (InvalidCommandException e) {
+                e.printStackTrace();
+            }
+        }
+        return listCount;
+    }
+
+    public static void updateFile(String input){
+        try {
+            FileWriter dukeSave = new FileWriter("./duke.txt", true);
+            BufferedWriter duke = new BufferedWriter(dukeSave);
+            duke.write(input);
+            duke.newLine();
+            duke.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
