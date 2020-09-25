@@ -2,6 +2,8 @@ package Duke.Tasks;
 
 public class Todo extends Task {
 
+    TaskType TODO;
+
     public Todo(String description) {
         super(description);
     }
@@ -12,7 +14,7 @@ public class Todo extends Task {
     }
 
     @Override
-    public int getTaskType() {
-        return 3;
+    public String getTaskType() {
+        return TaskType.TODO.toString();
     }
 }

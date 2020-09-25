@@ -6,6 +6,7 @@ import Duke.Tasks.Deadline;
 import Duke.Tasks.Event;
 import Duke.Tasks.Task;
 import Duke.Tasks.Todo;
+import Duke.Tasks.TaskType;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -94,15 +95,16 @@ public class Duke {
     public static int deleteTask(String input, ArrayList<Task> tasks, int listCount) {
         final int DELETE_OFFSET = 7;
         final int ARRAY_OFFSET = 1;
-        final int TODO = 3;
-        final int EVENT = 2;
-        final int DEADLINE = 1;
+        //final int TODO = 3;
+        //final int EVENT = 2;
+        //final int DEADLINE = 1;
         //Traditional tasks are tasks specified in Level-2
-        final int TRADITIONAL_TASK = 0;
+        //final int TRADITIONAL_TASK = 0;
         int lastNrPosition = input.length();
         String sub = input.substring(DELETE_OFFSET, lastNrPosition);
         int i = 0;
         String status;
+        String temp;
 
         try {
             i = Integer.parseInt(sub) - ARRAY_OFFSET;
@@ -112,19 +114,24 @@ public class Duke {
             System.out.println("Please enter a number!");
         }
         try {
-            int taskType = tasks.get(i).getTaskType();
+            String taskType = tasks.get(i).getTaskType();
             status = tasks.get(i).getStatusIcon();
             System.out.println("Noted. I've removed this task: ");
-            if (taskType == TRADITIONAL_TASK) {
+            switch (taskType) {
+            case "TRADITIONAL_TASK":
                 System.out.println("  [" + status + "] " + tasks.get(i).getDescription());
-            } else if (taskType == DEADLINE) {
-                String temp = tasks.get(i).getTime();
+                break;
+            case "DEADLINE":
+                temp = tasks.get(i).getTime();
                 System.out.println("  [D][" + status + "] " + tasks.get(i).getDescription() + "(by:" + temp + ")");
-            } else if (taskType == EVENT) {
-                String temp = tasks.get(i).getTime();
+                break;
+            case "EVENT":
+                temp = tasks.get(i).getTime();
                 System.out.println("  [E][" + status + "] " + tasks.get(i).getDescription() + "(on:" + temp + ")");
-            } else if (taskType == TODO) {
+                break;
+            case "TODO":
                 System.out.println("  [T][" + status + "] " + tasks.get(i).getDescription());
+                break;
             }
             tasks.remove(i);
             listCount--;
@@ -139,13 +146,15 @@ public class Duke {
     public static void flagAsDone(String input, ArrayList<Task> tasks) {
         final int IS_DONE_OFFSET = 5;
         final int ARRAY_OFFSET = 1;
-        final int TODO = 3;
-        final int EVENT = 2;
-        final int DEADLINE = 1;
-        final int TRADITIONAL_TASK = 0;
+        //final int TODO = 3;
+        //final int EVENT = 2;
+        //final int DEADLINE = 1;
+        //final int TRADITIONAL_TASK = 0;
         int i = 0;
         int lastNrPosition = input.length();
         String sub = input.substring(IS_DONE_OFFSET, lastNrPosition);
+        String temp;
+
         try {
             i = Integer.parseInt(sub) - ARRAY_OFFSET;
             boolean alreadyDone = tasks.get(i).getStatus();
@@ -160,18 +169,23 @@ public class Duke {
             return;
         }
         try {
-            int taskType = tasks.get(i).getTaskType();
             System.out.println("Nice! I've marked this task as done: ");
-            if (taskType == TRADITIONAL_TASK) {
+            String taskType = tasks.get(i).getTaskType();
+            switch (taskType) {
+            case "TRADITIONAL_TASK":
                 System.out.println("  [" + "\u2713" + "] " + tasks.get(i).getDescription());
-            } else if (taskType == DEADLINE) {
-                String temp = tasks.get(i).getTime();
+                break;
+            case "DEADLINE":
+                temp = tasks.get(i).getTime();
                 System.out.println("  [D][" + "\u2713" + "] " + tasks.get(i).getDescription() + "(by:" + temp + ")");
-            } else if (taskType == EVENT) {
-                String temp = tasks.get(i).getTime();
+                break;
+            case "EVENT":
+                temp = tasks.get(i).getTime();
                 System.out.println("  [E][" + "\u2713" + "] " + tasks.get(i).getDescription() + "(on:" + temp + ")");
-            } else if (taskType == TODO) {
+                break;
+            case "TODO":
                 System.out.println("  [T][" + "\u2713" + "] " + tasks.get(i).getDescription());
+                break;
             }
             tasks.get(i).markAsDone();
         } catch (IndexOutOfBoundsException e) {

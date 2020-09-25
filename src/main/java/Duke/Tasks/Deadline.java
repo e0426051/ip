@@ -20,7 +20,7 @@ public class Deadline extends Task {
     }
 
     @Override
-    public int getTaskType() {
-        return 1;
+    public String getTaskType() {
+        return TaskType.DEADLINE.toString();
     }
 }

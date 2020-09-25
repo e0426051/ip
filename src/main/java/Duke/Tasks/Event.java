@@ -20,7 +20,7 @@ public class Event extends Task {
     }
 
     @Override
-    public int getTaskType() {
-        return 2;
+    public String getTaskType() {
+        return TaskType.EVENT.toString();
     }
 }

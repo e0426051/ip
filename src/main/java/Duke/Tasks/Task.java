@@ -31,8 +31,8 @@ public class Task {
         return "[" + this.getStatusIcon() + "] " + this.getDescription();
     }
 
-    public int getTaskType(){
-        return 0;
+    public String getTaskType(){
+        return TaskType.TRADITIONAL_TASK.toString();
     }
 
     public String getTime() {
