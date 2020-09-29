@@ -6,6 +6,8 @@ import Duke.Tasks.Deadline;
 import Duke.Tasks.Event;
 import Duke.Tasks.Task;
 import Duke.Tasks.Todo;
+import Duke.Commands.CommandType;
+import Duke.Commands.Parser;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,14 +22,17 @@ public class Duke {
 
     //private Ui ui;
     //public static final Ui ui = new Ui();
+    //private Parser parser;
 
     public static void main(String[] args) {
         String input;
+        String commandType;
         int byeIndicator = 1;
         int listIndicator;
         //Replaceable with size() function. Won't be replaced.
         int listCount = 0;
         //ui = new Ui(listCount);
+        //parser = new Parser();
         boolean isDone;
         boolean isEvent;
         boolean isDeadline;
@@ -44,12 +49,14 @@ public class Duke {
         while(byeIndicator != PRESENT) {
             input = scan.nextLine();
             byeIndicator = input.compareToIgnoreCase("bye");
-            listIndicator = input.compareToIgnoreCase("list");
-            isDone = input.startsWith("done ");
-            isDeadline = input.startsWith("deadline ");
-            isEvent = input.startsWith("event ");
-            isToDo = input.startsWith("todo ");
-            isDelete = input.startsWith("delete ");
+            commandType = Parser.parse(input);
+            //listIndicator = input.compareToIgnoreCase("list");
+            //isDone = input.startsWith("done ");
+            //isDeadline = input.startsWith("deadline ");
+            //isEvent = input.startsWith("event ");
+            //isToDo = input.startsWith("todo ");
+            //isDelete = input.startsWith("delete ");
+            /*
             if (byeIndicator == PRESENT) {
                 Ui.displayByeMessage();
             } else if (listIndicator == PRESENT) {
@@ -89,6 +96,53 @@ public class Duke {
                     }
                 }
             }
+             */
+            switch (commandType) {
+                case "BYE":
+                    Ui.displayByeMessage();
+                    break;
+                case "LIST":
+                    displayList(listCount, tasks);
+                    break;
+                case "DONE":
+                    flagAsDone(input, tasks);
+                    break;
+                case "DELETE":
+                    listCount = deleteTask(input, tasks, listCount);
+                    break;
+                case "DEADLINE":
+                    try {
+                        listCount = createDeadline(input, listCount, tasks, false);
+                    } catch (InvalidFormatException e) {
+                        Ui.displayInvalidFormat();
+                    } catch (InvalidCommandException e) {
+                        Ui.displayInvalidCommand();
+                    }
+                    break;
+                case "EVENT":
+                    try {
+                        listCount = createEvent(input, listCount, tasks, false);
+                    } catch (InvalidFormatException e) {
+                        Ui.displayInvalidFormat();
+                    } catch (InvalidCommandException e) {
+                        Ui.displayInvalidCommand();
+                    }
+                    break;
+                case "TODO":
+                    try {
+                        listCount = createToDo(input, listCount, tasks, false);
+                    } catch (InvalidCommandException e) {
+                        Ui.displayInvalidCommand();
+                    }
+                    break;
+                default:
+                    try {
+                        listCount = createTraditionalTask(input, listCount, tasks, false);
+                    } catch (InvalidCommandException e) {
+                        Ui.displayInvalidCommand();
+                    }
+                    break;
+            }
         }
     }
 
@@ -107,32 +161,26 @@ public class Duke {
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Invalid task number. No items are deleted.");
         } catch (NumberFormatException e) {
-            //System.out.println("Please enter a number!");
             Ui.displayNotNumberErrorMessage();
         }
         try {
             String taskType = tasks.get(i).getTaskType();
             status = tasks.get(i).getStatusIcon();
-            //System.out.println("Noted. I've removed this task: ");
             Ui.displayRemoveMessage();
             switch (taskType) {
             //Traditional tasks are tasks specified in Level-2
             case "TRADITIONAL_TASK":
-                //System.out.println("  [" + status + "] " + tasks.get(i).getDescription());
                 Ui.displayTraditionalTask(status, tasks.get(i).getDescription());
                 break;
             case "DEADLINE":
                 temp = tasks.get(i).getTime();
-                //System.out.println("  [D][" + status + "] " + tasks.get(i).getDescription() + "(by:" + temp + ")");
                 Ui.displayDeadline(status, tasks.get(i).getDescription(), temp);
                 break;
             case "EVENT":
                 temp = tasks.get(i).getTime();
-                //System.out.println("  [E][" + status + "] " + tasks.get(i).getDescription() + "(on:" + temp + ")");
                 Ui.displayEvent(status, tasks.get(i).getDescription(), temp);
                 break;
             case "TODO":
-                //System.out.println("  [T][" + status + "] " + tasks.get(i).getDescription());
                 Ui.displayToDo(status, tasks.get(i).getDescription());
                 break;
             }
@@ -141,7 +189,6 @@ public class Duke {
             refreshFile(tasks);
             return listCount;
         } catch (IndexOutOfBoundsException e) {
-            //System.out.println("Invalid task number. No items are deleted.");
             Ui.displayDeleteIndexOutOfBoundsError();
         }
         return listCount;
@@ -160,44 +207,36 @@ public class Duke {
             boolean alreadyDone = tasks.get(i).getStatus();
             if (alreadyDone) {
                 Ui.displayTaskAlreadyDoneMessage();
-                //System.out.println("This task is already done!");
                 return;
             }
         } catch (IndexOutOfBoundsException e) {
             //Does not show message since the function will continue to run to the bottom
         } catch (NumberFormatException e) {
-            //System.out.println("Please Enter a number!");
             Ui.displayNotNumberErrorMessage();
             return;
         }
         try {
-            //System.out.println("Nice! I've marked this task as done: ");
             Ui.displayTaskDoneMessage();
             String taskType = tasks.get(i).getTaskType();
             switch (taskType) {
             case "TRADITIONAL_TASK":
-                //System.out.println("  [" + "\u2713" + "] " + tasks.get(i).getDescription());
                 Ui.displayTraditionalTask("\u2713", tasks.get(i).getDescription());
                 break;
             case "DEADLINE":
                 temp = tasks.get(i).getTime();
-                //System.out.println("  [D][" + "\u2713" + "] " + tasks.get(i).getDescription() + "(by:" + temp + ")");
                 Ui.displayDeadline("\u2713", tasks.get(i).getDescription(), temp);
                 break;
             case "EVENT":
                 temp = tasks.get(i).getTime();
-                //System.out.println("  [E][" + "\u2713" + "] " + tasks.get(i).getDescription() + "(on:" + temp + ")");
                 Ui.displayEvent("\u2713", tasks.get(i).getDescription(), temp);
                 break;
             case "TODO":
-                //System.out.println("  [T][" + "\u2713" + "] " + tasks.get(i).getDescription());
                 Ui.displayToDo("\u2713", tasks.get(i).getDescription());
                 break;
             }
             tasks.get(i).markAsDone();
             refreshFile(tasks);
         } catch (IndexOutOfBoundsException e) {
-            //System.out.println("Invalid task number or task does not exist. Please try again.");
             Ui.taskErrorMessage();
         }
     }
@@ -205,11 +244,9 @@ public class Duke {
     public static void displayList(int listCount, ArrayList<Task> tasks) {
         final int ARRAY_OFFSET = 1;
         int i;
-        //System.out.println("Here are the tasks in your list:");
         Ui.displayListMessage();
         for (i = 0; i < listCount; i++) {
             if (tasks.get(i).getDescription() != null) {
-                //System.out.println(i + ARRAY_OFFSET + ". " + tasks.get(i).toString());
                 Ui.displayList(i, tasks.get(i).toString());
             }
         }
@@ -224,7 +261,6 @@ public class Duke {
         }
         tasks.add(listCount, new Task(input));
 
-        //System.out.println("Added: " + input);
         Ui.displayTraditionalAddMessage(input);
         if (!initialize) {
             updateFile(tasks.get(listCount));
@@ -238,11 +274,6 @@ public class Duke {
         final int TO_DO_OFFSET = 5;
         int checkValid = input.compareTo("todo ");
         if (checkValid == 0) {
-            /*
-            throw new InvalidCommandException("Invalid command. " +
-                    "If you wish to create a todo with a single space as description, " +
-                    "please enter 2 spaces.");
-             */
             throw new InvalidCommandException();
         }
         String inputTaskDescription;
@@ -259,11 +290,6 @@ public class Duke {
         final int INVALID = 0;
         int checkValid = input.compareTo("event ");
         if (checkValid == INVALID) {
-            /*
-            throw new InvalidCommandException("Invalid command. " +
-                    "If you wish to create a event with a single space as description, " +
-                    "please enter 2 spaces.");
-             */
             throw new InvalidCommandException();
         }
         final int EVENT_OFFSET = 6;
@@ -289,22 +315,13 @@ public class Duke {
             isValidFormat = false;
         }
         if (i == EVENT_OFFSET) {
-            //throw new InvalidFormatException("Invalid format. Event cannot be empty.");
             throw new InvalidFormatException();
         } else if (!isValidFormat) {
-            /*
-            throw new InvalidFormatException("Invalid format. " +
-                    "Please check you have entered \"/on \" properly.");
-             */
             throw new InvalidFormatException();
         } else {
             String checkDate = input.substring(i + BY_ON_OFFSET + 1);
             boolean isEmpty = checkDate.isEmpty();
             if (isEmpty) {
-                /*
-                throw new InvalidFormatException("Invalid format. " +
-                        "Please check you have entered a non-empty date/time.");
-                 */
                 throw new InvalidFormatException();
             }
         }
@@ -322,11 +339,6 @@ public class Duke {
         final int INVALID = 0;
         int checkValid = input.compareTo("deadline ");
         if (checkValid == INVALID) {
-            /*
-            throw new InvalidCommandException("Invalid command." +
-                    " If you wish to create a deadline with a single space as description, " +
-                    "please enter 2 spaces.");
-             */
             throw new InvalidCommandException();
         }
         final int BY_ON_OFFSET = 3;
@@ -352,22 +364,13 @@ public class Duke {
             isValidFormat = false;
         }
         if (i == DEADLINE_OFFSET) {
-            //throw new InvalidFormatException("Invalid format. Deadline cannot be empty.");
             throw new InvalidFormatException();
         } else if (!isValidFormat) {
-            /*
-            throw new InvalidFormatException("Invalid format. " +
-                    "Please check you have entered \"/by \" properly.");
-             */
             throw new InvalidFormatException();
         } else {
             String checkDate = input.substring(i + BY_ON_OFFSET + 1);
             boolean isEmpty = checkDate.isEmpty();
             if (isEmpty) {
-                /*
-                throw new InvalidFormatException("Invalid format. " +
-                        "Please check you have entered a non-empty date/time.");
-                 */
                 throw new InvalidFormatException();
             }
         }
@@ -381,12 +384,9 @@ public class Duke {
     }
 
     public static int listInput(int listCount, Task task) {
-        //System.out.println("Got it. I've added this task: ");
         Ui.displayAddMessage();
-        //System.out.println("  " + task.toString());
         Ui.displayTask(task.toString());
         listCount++;
-        //System.out.println("Now you have " + listCount + " tasks in the list.");
         Ui.displayNumberMessage(listCount);
         return listCount;
     }
@@ -419,18 +419,19 @@ public static void updateFile(Task tasks){
     public static void createFile(File duke) {
         try {
             if (duke.exists()) {
-                System.out.println("duke.txt exists! Loading file contents...");
+                //System.out.println("duke.txt exists! Loading file contents...");
+                Ui.displayFilePresentMessage();
                 return;
             }
             if (!duke.getParentFile().exists()) {
                 duke.getParentFile().mkdirs();
-                System.out.println("duke.txt does NOT exist. A new file has been created.");
-                System.out.println("duke.txt has been created at: " + duke.getAbsolutePath());
-                System.out.println("WARNING: Please do not move or delete duke.txt.");
+                //System.out.println("duke.txt does NOT exist. A new file has been created.");
+                //System.out.println("duke.txt has been created at: " + duke.getAbsolutePath());
+                //System.out.println("WARNING: Please do not move or delete duke.txt.");
+                Ui.displayFileNotPresentMessage(duke.getAbsolutePath());
             }
             duke.createNewFile();
         } catch (IOException e) {
-            //System.out.println("Unable to create file! Reason: " + e.getMessage());
             Ui.displayMakeFileError(e.getMessage());
         }
     }
@@ -443,7 +444,6 @@ public static void updateFile(Task tasks){
         try {
             loadFile = new Scanner(path);
         } catch (IOException e) {
-            //System.out.println("File not found error.");
             Ui.displayFileNotFoundError();
         }
         loadFile.useDelimiter("\n");

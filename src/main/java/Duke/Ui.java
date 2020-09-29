@@ -101,4 +101,14 @@ public class Ui {
     public static void displayMakeFileError(String input) {
         System.out.println("Unable to create file! Reason: " + input);
     }
+
+    public static void displayFilePresentMessage() {
+        System.out.println("duke.txt exists! Loading file contents...");
+    }
+
+    public static void displayFileNotPresentMessage(String directory) {
+        System.out.println("duke.txt does NOT exist. A new file has been created.");
+        System.out.println("duke.txt has been created at: " + directory);
+        System.out.println("WARNING: Please do not move or delete duke.txt.");
+    }
 }
