@@ -106,9 +106,14 @@ public class Ui {
         System.out.println("duke.txt exists! Loading file contents...");
     }
 
-    public static void displayFileNotPresentMessage(String directory) {
-        System.out.println("duke.txt does NOT exist. A new file has been created.");
-        System.out.println("duke.txt has been created at: " + directory);
-        System.out.println("WARNING: Please do not move or delete duke.txt.");
+    public static void displayFileNotPresentMessage(String directory, boolean isFileMade) {
+        if (isFileMade) {
+            System.out.println("duke.txt does NOT exist. A new file has been created.");
+            System.out.println("duke.txt has been created at: " + directory);
+            System.out.println("WARNING: Please do not move or delete duke.txt.");
+        } else {
+            System.out.println("There is a problem preventing a new file from being created.");
+        }
     }
+
 }

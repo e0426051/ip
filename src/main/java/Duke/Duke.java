@@ -2,12 +2,9 @@ package Duke;
 
 import Duke.Exceptions.InvalidCommandException;
 import Duke.Exceptions.InvalidFormatException;
-import Duke.Tasks.Deadline;
-import Duke.Tasks.Event;
-import Duke.Tasks.Task;
-import Duke.Tasks.Todo;
-import Duke.Commands.CommandType;
 import Duke.Commands.Parser;
+import Duke.Tasks.Storage;
+import Duke.Tasks.TaskList;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,16 +30,11 @@ public class Duke {
         int listCount = 0;
         //ui = new Ui(listCount);
         //parser = new Parser();
-        boolean isDone;
-        boolean isEvent;
-        boolean isDeadline;
-        boolean isToDo;
-        boolean isDelete;
         final int PRESENT = 0;
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        //ArrayList<Task> tasks = new ArrayList<>();
 
-        listCount = fileParser(tasks, listCount);
+        listCount = Storage.fileParser(TaskList.tasks, listCount);
 
         Ui.displayWelcomeMessage();
         Scanner scan = new Scanner(System.in);
@@ -50,103 +42,56 @@ public class Duke {
             input = scan.nextLine();
             byeIndicator = input.compareToIgnoreCase("bye");
             commandType = Parser.parse(input);
-            //listIndicator = input.compareToIgnoreCase("list");
-            //isDone = input.startsWith("done ");
-            //isDeadline = input.startsWith("deadline ");
-            //isEvent = input.startsWith("event ");
-            //isToDo = input.startsWith("todo ");
-            //isDelete = input.startsWith("delete ");
-            /*
-            if (byeIndicator == PRESENT) {
-                Ui.displayByeMessage();
-            } else if (listIndicator == PRESENT) {
-                displayList(listCount, tasks);
-            } else if (isDone) {
-                flagAsDone(input, tasks);
-            } else if (isDelete) {
-                listCount = deleteTask(input, tasks, listCount);
-            } else {
-                if (isDeadline) {
-                    try {
-                        listCount = createDeadline(input, listCount, tasks, false);
-                    } catch (InvalidFormatException e) {
-                        Ui.displayInvalidFormat();
-                    } catch (InvalidCommandException e) {
-                        Ui.displayInvalidCommand();
-                    }
-                } else if (isEvent) {
-                    try {
-                        listCount = createEvent(input, listCount, tasks, false);
-                    } catch (InvalidFormatException e) {
-                        Ui.displayInvalidFormat();
-                    } catch (InvalidCommandException e) {
-                        Ui.displayInvalidCommand();
-                    }
-                } else if (isToDo) {
-                    try {
-                        listCount = createToDo(input, listCount, tasks, false);
-                    } catch (InvalidCommandException e) {
-                        Ui.displayInvalidCommand();
-                    }
-                } else {
-                    try {
-                        listCount = createTraditionalTask(input, listCount, tasks, false);
-                    } catch (InvalidCommandException e) {
-                        Ui.displayInvalidCommand();
-                    }
-                }
-            }
-             */
             switch (commandType) {
-                case "BYE":
-                    Ui.displayByeMessage();
-                    break;
-                case "LIST":
-                    displayList(listCount, tasks);
-                    break;
-                case "DONE":
-                    flagAsDone(input, tasks);
-                    break;
-                case "DELETE":
-                    listCount = deleteTask(input, tasks, listCount);
-                    break;
-                case "DEADLINE":
-                    try {
-                        listCount = createDeadline(input, listCount, tasks, false);
-                    } catch (InvalidFormatException e) {
-                        Ui.displayInvalidFormat();
-                    } catch (InvalidCommandException e) {
-                        Ui.displayInvalidCommand();
-                    }
-                    break;
-                case "EVENT":
-                    try {
-                        listCount = createEvent(input, listCount, tasks, false);
-                    } catch (InvalidFormatException e) {
-                        Ui.displayInvalidFormat();
-                    } catch (InvalidCommandException e) {
-                        Ui.displayInvalidCommand();
-                    }
-                    break;
-                case "TODO":
-                    try {
-                        listCount = createToDo(input, listCount, tasks, false);
-                    } catch (InvalidCommandException e) {
-                        Ui.displayInvalidCommand();
-                    }
-                    break;
-                default:
-                    try {
-                        listCount = createTraditionalTask(input, listCount, tasks, false);
-                    } catch (InvalidCommandException e) {
-                        Ui.displayInvalidCommand();
-                    }
-                    break;
+            case "BYE":
+                Ui.displayByeMessage();
+                break;
+            case "LIST":
+                TaskList.displayList(listCount, TaskList.tasks);
+                break;
+            case "DONE":
+                TaskList.flagAsDone(input, TaskList.tasks);
+                break;
+            case "DELETE":
+                listCount = TaskList.deleteTask(input, TaskList.tasks, listCount);
+                break;
+            case "DEADLINE":
+                try {
+                    listCount = TaskList.createDeadline(input, listCount, TaskList.tasks, false);
+                } catch (InvalidFormatException e) {
+                    Ui.displayInvalidFormat();
+                } catch (InvalidCommandException e) {
+                    Ui.displayInvalidCommand();
+                }
+                break;
+            case "EVENT":
+                try {
+                    listCount = TaskList.createEvent(input, listCount, TaskList.tasks, false);
+                } catch (InvalidFormatException e) {
+                    Ui.displayInvalidFormat();
+                } catch (InvalidCommandException e) {
+                    Ui.displayInvalidCommand();
+                }
+                break;
+            case "TODO":
+                try {
+                    listCount = TaskList.createToDo(input, listCount, TaskList.tasks, false);
+                } catch (InvalidCommandException e) {
+                    Ui.displayInvalidCommand();
+                }
+                break;
+            default:
+                try {
+                    listCount = TaskList.createTraditionalTask(input, listCount, TaskList.tasks, false);
+                } catch (InvalidCommandException e) {
+                    Ui.displayInvalidCommand();
+                }
+                break;
             }
         }
     }
 
-
+/*
     public static int deleteTask(String input, ArrayList<Task> tasks, int listCount) {
         final int DELETE_OFFSET = 7;
         final int ARRAY_OFFSET = 1;
@@ -242,7 +187,6 @@ public class Duke {
     }
 
     public static void displayList(int listCount, ArrayList<Task> tasks) {
-        final int ARRAY_OFFSET = 1;
         int i;
         Ui.displayListMessage();
         for (i = 0; i < listCount; i++) {
@@ -392,7 +336,7 @@ public class Duke {
     }
 
 
-public static void updateFile(Task tasks){
+public static void updateFile(Task tasks) {
     try {
         FileWriter dukeSave = new FileWriter("./duke.txt", true);
         BufferedWriter duke = new BufferedWriter(dukeSave);
@@ -404,7 +348,7 @@ public static void updateFile(Task tasks){
     }
 }
 
-    public static void refreshFile(ArrayList<Task> tasks){
+    public static void refreshFile(ArrayList<Task> tasks) {
         try {
             FileWriter dukeUpdate = new FileWriter("./duke.txt", false);
             for (Task task : tasks) {
@@ -424,11 +368,8 @@ public static void updateFile(Task tasks){
                 return;
             }
             if (!duke.getParentFile().exists()) {
-                duke.getParentFile().mkdirs();
-                //System.out.println("duke.txt does NOT exist. A new file has been created.");
-                //System.out.println("duke.txt has been created at: " + duke.getAbsolutePath());
-                //System.out.println("WARNING: Please do not move or delete duke.txt.");
-                Ui.displayFileNotPresentMessage(duke.getAbsolutePath());
+                boolean isFileMade = duke.getParentFile().mkdirs();
+                Ui.displayFileNotPresentMessage(duke.getAbsolutePath(), isFileMade);
             }
             duke.createNewFile();
         } catch (IOException e) {
@@ -436,7 +377,7 @@ public static void updateFile(Task tasks){
         }
     }
 
-    public static int fileParser(ArrayList<Task> tasks, int listCount){
+    public static int fileParser(ArrayList<Task> tasks, int listCount) {
         createFile(new File("./duke.txt"));
         Path path = Paths.get("./duke.txt");
 
@@ -466,7 +407,7 @@ public static void updateFile(Task tasks){
         return listCount;
     }
 
-    public static String reformatDate(String input, char taskType){
+    public static String reformatDate(String input, char taskType) {
 
         switch (taskType) {
         case 'D':
@@ -501,15 +442,12 @@ public static void updateFile(Task tasks){
         }
     }
 
-    public static int loadFileAtStartup(String input, int listCount, ArrayList<Task> tasks){
-        boolean isDeadline;
-        boolean isEvent;
-        boolean isToDo;
+    public static int loadFileAtStartup(String input, int listCount, ArrayList<Task> tasks) {
 
-        isDeadline = input.startsWith("deadline ");
-        isEvent = input.startsWith("event ");
-        isToDo = input.startsWith("todo ");
-        if (isDeadline) {
+        String commandType = Parser.parse(input);
+
+        switch (commandType) {
+        case "DEADLINE":
             try {
                 listCount = createDeadline(input, listCount, tasks, true);
             } catch (InvalidFormatException e) {
@@ -517,7 +455,8 @@ public static void updateFile(Task tasks){
             } catch (InvalidCommandException e) {
                 Ui.displayInvalidCommand();
             }
-        } else if (isEvent) {
+            break;
+        case "EVENT":
             try {
                 listCount = createEvent(input, listCount, tasks, true);
             } catch (InvalidFormatException e) {
@@ -525,19 +464,24 @@ public static void updateFile(Task tasks){
             } catch (InvalidCommandException e) {
                 Ui.displayInvalidCommand();
             }
-        } else if (isToDo) {
-            try{
+            break;
+        case "TODO":
+            try {
                 listCount = createToDo(input, listCount, tasks, true);
             } catch (InvalidCommandException e) {
                 Ui.displayInvalidCommand();
             }
-        } else {
-            try{
+            break;
+        default:
+            try {
                 listCount = createTraditionalTask(input, listCount, tasks, true);
             } catch (InvalidCommandException e) {
                 Ui.displayInvalidCommand();
             }
+            break;
         }
         return listCount;
     }
+
+ */
 }
