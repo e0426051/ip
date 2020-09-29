@@ -18,7 +18,8 @@ public class Storage {
 
     public static void updateFile(Task tasks) {
         try {
-            FileWriter dukeSave = new FileWriter("./duke.txt", true);
+            //FileWriter dukeSave = new FileWriter("./duke.txt", true);
+            FileWriter dukeSave = new FileWriter("duke.txt", true);
             BufferedWriter duke = new BufferedWriter(dukeSave);
             duke.write(tasks.toString());
             duke.newLine();
@@ -30,7 +31,8 @@ public class Storage {
 
     public static void refreshFile(ArrayList<Task> tasks) {
         try {
-            FileWriter dukeUpdate = new FileWriter("./duke.txt", false);
+            //FileWriter dukeUpdate = new FileWriter("./duke.txt", false);
+            FileWriter dukeUpdate = new FileWriter("duke.txt", false);
             for (Task task : tasks) {
                 dukeUpdate.write(String.format("%s\n", task.toString()));
             }
@@ -43,23 +45,33 @@ public class Storage {
     public static void createFile(File duke) {
         try {
             if (duke.exists()) {
-                //System.out.println("duke.txt exists! Loading file contents...");
                 Ui.displayFilePresentMessage();
                 return;
             }
+            /*
             if (!duke.getParentFile().exists()) {
-                boolean isFileMade = duke.getParentFile().mkdirs();
+                boolean isDirectoryMade = duke.getParentFile().mkdirs();
+                boolean isFileMade = duke.createNewFile();
+                boolean isStructureMade = (isDirectoryMade && isFileMade);
+                Ui.displayFileNotPresentMessage(duke.getAbsolutePath(), isStructureMade);
+            }
+
+             */
+            if(!duke.exists()) {
+                boolean isFileMade = duke.createNewFile();
                 Ui.displayFileNotPresentMessage(duke.getAbsolutePath(), isFileMade);
             }
-            duke.createNewFile();
+
         } catch (IOException e) {
             Ui.displayMakeFileError(e.getMessage());
         }
     }
 
     public static int fileParser(ArrayList<Task> tasks, int listCount) {
-        createFile(new File("./duke.txt"));
-        Path path = Paths.get("./duke.txt");
+        //createFile(new File("./duke.txt"));
+        //Path path = Paths.get("./duke.txt");
+        createFile(new File("duke.txt"));
+        Path path = Paths.get("duke.txt");
 
         Scanner loadFile = null;
         try {
@@ -67,6 +79,7 @@ public class Storage {
         } catch (IOException e) {
             Ui.displayFileNotFoundError();
         }
+        assert loadFile != null;
         loadFile.useDelimiter("\n");
 
         while (loadFile.hasNext()) {

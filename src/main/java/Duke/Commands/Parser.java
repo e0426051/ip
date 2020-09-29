@@ -6,25 +6,17 @@ import Duke.Exceptions.InvalidFormatException;
 import Duke.Ui;
 
 public class Parser {
-    private static int byeIndicator = 1;
-    private static int listIndicator;
-    private static boolean isDone;
-    private static boolean isEvent;
-    private static boolean isDeadline;
-    private static boolean isToDo;
-    private static boolean isDelete;
-    private static boolean isFind;
     final static int PRESENT = 0;
 
     public static String parse (String input) {
-        byeIndicator = input.compareToIgnoreCase("bye");
-        listIndicator = input.compareToIgnoreCase("list");
-        isDone = input.startsWith("done ");
-        isDeadline = input.startsWith("deadline ");
-        isEvent = input.startsWith("event ");
-        isToDo = input.startsWith("todo ");
-        isDelete = input.startsWith("delete ");
-        isFind = input.startsWith("find ");
+        int byeIndicator = input.compareToIgnoreCase("bye");
+        int listIndicator = input.compareToIgnoreCase("list");
+        boolean isDone = input.startsWith("done ");
+        boolean isDeadline = input.startsWith("deadline ");
+        boolean isEvent = input.startsWith("event ");
+        boolean isToDo = input.startsWith("todo ");
+        boolean isDelete = input.startsWith("delete ");
+        boolean isFind = input.startsWith("find ");
 
         if (byeIndicator == PRESENT) {
             return CommandType.BYE.toString();

@@ -3,19 +3,12 @@ package Duke.Tasks;
 import Duke.Exceptions.InvalidCommandException;
 import Duke.Exceptions.InvalidFormatException;
 import Duke.Ui;
-import Duke.Tasks.Storage;
-
 
 import java.util.ArrayList;
 
 public class TaskList {
 
     public static ArrayList<Task> tasks = new ArrayList<>();
-
-    public int size(){
-        //Returns the actual size, i.e. does not count from zero.
-        return tasks.size();
-    }
 
     public static int deleteTask(String input, ArrayList<Task> tasks, int listCount) {
         final int DELETE_OFFSET = 7;
