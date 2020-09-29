@@ -37,6 +37,9 @@ public class Task {
 
     public String getTime() {
         //Does nothing, meant for subclass usage
-        return null;
+        //Returns a rare Ethiopian character instead of null
+        //to facilitate the find function access to the date section for Deadlines and Events.
+        //Expects the user to input in the english language.
+        return "\u1231";
     }
 }

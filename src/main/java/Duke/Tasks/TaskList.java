@@ -3,6 +3,7 @@ package Duke.Tasks;
 import Duke.Exceptions.InvalidCommandException;
 import Duke.Exceptions.InvalidFormatException;
 import Duke.Ui;
+import com.sun.source.util.TaskListener;
 
 import java.util.ArrayList;
 
@@ -110,6 +111,23 @@ public class TaskList {
         for (i = 0; i < listCount; i++) {
             if (tasks.get(i).getDescription() != null) {
                 Ui.displayList(i, tasks.get(i).toString());
+            }
+        }
+    }
+
+    public static void displayFind(int listCount, ArrayList<Task> tasks, String input) {
+        final int IS_FIND_OFFSET = 5;
+        int i;
+        int j = 0;
+        int lastNrPosition = input.length();
+        String sub = input.substring(IS_FIND_OFFSET, lastNrPosition);
+        Ui.displayFindMessage();
+        for (i = 0; i < listCount; i++) {
+            if (tasks.get(i).getDescription() != null && (tasks.get(i).
+                    getDescription().contains(sub)) ||
+                    tasks.get(i).getTime().contains(sub)) {
+                Ui.displayList(j, tasks.get(i).toString());
+                j++;
             }
         }
     }
