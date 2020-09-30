@@ -18,8 +18,8 @@
 
 ## Quick Start Guide
 1. Install Java 11 on your computer. Refrain from using other versions to minimize unexpected runtime errors.
-2. Download duke.jar to your computer. Place duke.jar in a non-restricted folder to minimize I/O errors. An example of a restricted folder in Windows may be the root directory `C:\`.
-3. Use `cd` command to navigate to the correct folder and run the program using `java -jar duke.jar`. The `cd` navigation is important as duke will only search the current directory for the file, and not the root directory of the duke program itself automatically.
+2. Download duke to your computer. Place duke in a non-restricted folder to minimize I/O errors. An example of a restricted folder in Windows may be the root directory `C:\`.
+3. Use `cd` command to navigate to the correct folder and run the program using `java -jar [filename].jar`. The `cd` navigation is important as duke will only search the current directory for the file, and not the root directory of the duke program itself automatically.
 4. If you are a new user, the program will create a duke.txt file. Please do not delete this file as it contains all your tasks.
 
 ## Features 
@@ -227,7 +227,7 @@ A2: Undo functions are not supported. Please make a duplicate task and delete th
 ### 3.
 Q3: I am not able to see ticks and crosses on the tasks. I can only see "?". How do I resolve this?
 
-A3: Run `Chcp 65001` followed by `java -Dfile.encoding=UTF-8 -jar duke.jar` to resolve the issue. Also, change the fonts for your console
+A3: Run `Chcp 65001` followed by `java -Dfile.encoding=UTF-8 -jar [filename].jar` to resolve the issue. Also, change the fonts for your console
 application to NSimSun. Please ensure you are in the correct directory before doing so.
 
 
