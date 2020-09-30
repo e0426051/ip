@@ -1,6 +1,6 @@
 [T][✓] fff
 [✓]  done 7
-[T][✘] finish homework
+[T][✓] finish homework
 [D][✘] finish homework (by: tommorrow)
 [E][✘] midterms (on: friday)
 [✘]  done 7

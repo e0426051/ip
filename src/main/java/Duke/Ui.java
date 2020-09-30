@@ -201,4 +201,8 @@ public class Ui {
         }
     }
 
+    public static void displayFileLocation(String input) {
+        System.out.println("duke.txt is located at " + input);
+    }
+
 }

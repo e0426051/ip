@@ -62,6 +62,7 @@ public class Storage {
     public static void createFile(File duke) {
         try {
             if (duke.exists()) {
+                Ui.displayFileLocation(duke.getAbsolutePath());
                 Ui.displayFilePresentMessage();
                 return;
             }
