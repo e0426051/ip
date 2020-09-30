@@ -9,7 +9,13 @@ import Duke.Tasks.TaskList;
 import java.util.Scanner;
 
 public class Duke {
-
+    /**
+     * Main duke function. Backbone function that calls Ui, TaskList, Storage and Parser classes.
+     * @see TaskList
+     * @see Ui
+     * @see Storage
+     * @see Parser
+     */
     public static void main(String[] args) {
         String input;
         String commandType;

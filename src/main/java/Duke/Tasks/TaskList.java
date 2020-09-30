@@ -57,6 +57,12 @@ public class TaskList {
         return listCount;
     }
 
+    /**
+     * Flags a task as done. Takes the positive integer the user inputs and
+     * mark the corresponding task as done.
+     * @param input the user input.
+     * @param tasks the arraylist of tasks.
+     */
     public static void flagAsDone(String input, ArrayList<Task> tasks) {
         final int IS_DONE_OFFSET = 5;
         final int ARRAY_OFFSET = 1;
@@ -104,6 +110,11 @@ public class TaskList {
         }
     }
 
+    /**
+     * Displays the task list to the user.
+     * @param listCount the number of tasks in the list.
+     * @param tasks the arraylist of tasks.
+     */
     public static void displayList(int listCount, ArrayList<Task> tasks) {
         int i;
         Ui.displayListMessage();
@@ -114,6 +125,15 @@ public class TaskList {
         }
     }
 
+    /**
+     * Creates a traditional task.
+     * @param input the user input.
+     * @param listCount the number of tasks in the list.
+     * @param tasks the arraylist of tasks.
+     * @param initialize boolean of whether the command is input during startup or by user.
+     * @return listCount
+     * @throws InvalidCommandException
+     */
     public static int createTraditionalTask(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidCommandException {
         //Accepts "todo", "deadline" and "event" without spaces as traditional tasks.
@@ -131,6 +151,15 @@ public class TaskList {
         return listCount;
     }
 
+    /**
+     * Creates a todo
+     * @param input the user input.
+     * @param listCount the number of tasks in the list.
+     * @param tasks the arraylist of tasks.
+     * @param initialize boolean of whether the command is input during startup or by user.
+     * @return listCount
+     * @throws InvalidCommandException
+     */
     public static int createToDo(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidCommandException {
         final int TO_DO_OFFSET = 5;
@@ -147,6 +176,15 @@ public class TaskList {
         return listInput(listCount, tasks.get(listCount));
     }
 
+    /**
+     * Creates a event.
+     * @param input the user input.
+     * @param listCount the number of tasks in the list.
+     * @param tasks the arraylist of tasks.
+     * @param initialize boolean of whether the command is input during startup or by user.
+     * @return listCount
+     * @throws InvalidCommandException
+     */
     public static int createEvent(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidFormatException, InvalidCommandException {
         final int INVALID = 0;
@@ -196,6 +234,15 @@ public class TaskList {
         return listInput(listCount, tasks.get(listCount));
     }
 
+    /**
+     * Creates a deadline.
+     * @param input the user input.
+     * @param listCount the number of tasks in the list.
+     * @param tasks the arraylist of tasks.
+     * @param initialize boolean of whether the command is input during startup or by user.
+     * @return listCount
+     * @throws InvalidCommandException
+     */
     public static int createDeadline(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidFormatException, InvalidCommandException {
         final int INVALID = 0;
