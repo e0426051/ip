@@ -43,7 +43,9 @@ Format: `list` **without any arguments.**
 Usage: `list`
 ##### Sample Outcome
 Outcome: 
+
 `Here are the tasks in your list:`
+
 `1. [T][✓] eat breakfast`
 ##### Exceptions
 Exceptions: None. This command will always run.
@@ -57,8 +59,11 @@ Format: `todo [task description]`
 Usage: `todo finish homework`
 ##### Sample Outcome
 Outcome:
+
 `Got it. I've added this task: `
+
 `  [T][✘] finish homework`
+
 `Now you have 8 tasks in the list.`
 ##### Exceptions
 Exceptions: The program will display an error message `Invalid command.` if you type `todo ` without a task description.
@@ -72,8 +77,11 @@ Format: `deadline [task description] /by [deadline]`. The [deadline] is in strin
 Usage: `deadline finish homework /by tommorrow`
 ##### Sample Outcome
 Outcome:
+
 `Got it. I've added this task:` 
+
 `  [D][✘] finish homework (by: tommorrow)`
+
 `Now you have 6 tasks in the list.`
 ##### Exceptions
 Exceptions: The program will display an error message `Invalid command.` if you type `deadline ` without a task description **nor** the deadline.
@@ -88,8 +96,11 @@ Format: `event [task description] /on [occurrence]`. The [occurrence] is in stri
 Usage: `event midterms /on friday`
 ##### Sample Outcome
 Outcome:
+
 `Got it. I've added this task:` 
+
 `  [E][✘] midterms (on: friday)`
+
 `Now you have 2 tasks in the list.`
 ##### Exceptions
 Exceptions: The program will display an error message `Invalid command.` if you type `event ` without a task description **nor** the occurrance.
@@ -104,9 +115,13 @@ Format: `done [task number]`
 Usage: `done 3`
 ##### Sample Outcome
 Outcome:
+
 `Nice! I've marked this task as done: `
+
 `  [✓] movies`
+
 Outcome:
+
 `This task is already done!`
 ##### Exceptions
 Exceptions: The program will display an error message `Please Enter a number!` if you type `done ` without a task number, or you typed a non-number
@@ -122,7 +137,9 @@ Format: `delete [task number]`
 Usage: `delete 3`
 ##### Sample Outcome
 Outcome:
+
 `Noted. I've removed this task: `
+
 `  [✓] lunch`
 ##### Exceptions
 Exceptions: The program will display an error message `Invalid task number or input is not a number. No items are deleted.` for all invalid inputs,
@@ -138,8 +155,11 @@ Format: `find [keyword]`
 Usage: `find homework`
 ##### Sample Outcome
 Outcome:
+
 `Here are the matching tasks in your list:`
+
 `1. [✓] all the homework`
+
 `2. [E][✘] midterms (on: the day without homework)`
 ##### Exceptions
 Exceptions: None.
@@ -153,6 +173,7 @@ Format: `bye` **without any arguments.**
 Usage: `bye`
 ##### Sample Outcome
 Outcome:
+
 `Bye. Hope to see you again soon!`
 ##### Exceptions
 Exceptions: None.
@@ -166,8 +187,11 @@ Format: `[input]`
 Usage: `todo`, `event`, `find`, `java`, `movie /at 9pm`
 ##### Sample Outcome
 Outcome:
+
 `Added: todo`
+
 Outcome:
+
 `Added: movie /at 9pm`
 ##### Exceptions
 Exceptions: None.
@@ -191,14 +215,17 @@ Move the jar file to another folder with proper access. For example, refrain fro
 
 ### 1.
 Q1: How do I ensure my tasks are saved even if my storage fails (e.g. HDD failure)?
+
 A1: Please backup duke.txt and place it at the same directory as the duke program.
 
 ### 2.
 Q2: I marked a task as done by mistake. Can I undo it?
+
 A2: Undo functions are not supported. Please make a duplicate task and delete the former task as a workaround.
 
 ### 3.
 Q3: I am not able to see ticks and crosses on the tasks. I can only see "?". How do I resolve this?
+
 A3: Run `Chcp 65001` followed by `java -Dfile.encoding=UTF-8 -jar duke.jar` to resolve the issue. Also, change the fonts for your console
 application to NSimSun. Please ensure you are in the correct directory before doing so.
 
