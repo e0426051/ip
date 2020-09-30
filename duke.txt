@@ -1,4 +1,8 @@
 [T][✓] fff
 [✓] done 7
-[✘] d
 [✘] e
+[T][✘] finish homework
+[D][✘] finish homework (by: tommorrow)
+[E][✘] midterms (on: friday)
+[✘]  done 7
+[✘] todo
