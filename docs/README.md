@@ -5,7 +5,7 @@
     + [1. list](#1-list-the-current-task-list-list)
     + [2. todo](#2-add-a-todo-task-todo-)
     + [3. deadline](#3-add-a-deadline-task-deadline-)
-    + [4. event](#4-add-a-event-task-event-)
+    + [4. event](#4-add-an-event-task-event-)
     + [5. done](#5-mark-task-as-done-done-)
     + [6. delete](#6-delete-a-task-delete-)
     + [7. find](#7-find-tasks-find-)
