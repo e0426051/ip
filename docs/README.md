@@ -18,7 +18,7 @@
 
 ## Quick Start Guide
 1. Install Java 11 on your computer. Refrain from using other versions to minimize unexpected runtime errors.
-2. Download duke.jar to your computer. Place duke.jar in a non-restricted folder to minimize I/O errors. An example of a restricted folder in Windows may be `C:\Windows\System32`.
+2. Download duke.jar to your computer. Place duke.jar in a non-restricted folder to minimize I/O errors. An example of a restricted folder in Windows may be the root directory `C:\`.
 3. Use `cd` command to navigate to the correct folder and run the program using `java -jar duke.jar`
 4. If you are a new user, the program will create a duke.txt file. Please do not delete this file as it contains all your tasks.
 
@@ -216,7 +216,8 @@ Move the jar file to another folder with proper access. For example, refrain fro
 ### 1.
 Q1: How do I ensure my tasks are saved even if my storage fails (e.g. HDD failure)?
 
-A1: Please backup duke.txt and place it at the same directory as the duke program.
+A1: Please backup duke.txt and place it at the same directory as the duke program. Do take note to `cd` to said directory in terminal before running duke so that
+duke recognizes the presence of the file.
 
 ### 2.
 Q2: I marked a task as done by mistake. Can I undo it?
