@@ -2,7 +2,7 @@
 
 ## Quick Start Guide
 1. Install Java 11 on your computer. Refrain from using other versions to minimize unexpected runtime errors.
-2. Download duke.jar to your computer. Place duke.jar in a non-restricted folder to minimize IO errors. An example of a restricted folder in Windows may be C:\Windows\System32
+2. Download duke.jar to your computer. Place duke.jar in a non-restricted folder to minimize IO errors. An example of a restricted folder in Windows may be `C:\Windows\System32`.
 3. Use `cd` command to navigate to the correct folder and run the program using `java -jar duke.jar`
 4. If you are a new user, the program will create a duke.txt file. Please do not delete this file as it contains all your tasks.
 
@@ -134,3 +134,16 @@ Move the jar file to another folder with proper access. For example, refrain fro
 
 
 
+## Command Summary
+
+Command | Format | Usage Example
+------- | ---------- | ------------
+list | `list` | `list`
+todo | `todo [task description]` | `todo mop the room`
+deadline | `deadline [task description] /by [deadline]`| `deadline homework /by tommorrow`
+event | `event [task description] /on [occurrence]` | `event favorite show /on yesterday`
+find | `find [keyword]` | `find homework`
+done | `done [task number]`  | `done 8`
+delete | `delete [task number]` | `delete 1`
+bye | `bye` | `bye`
+traditional task | `[input]` | `buy book`
