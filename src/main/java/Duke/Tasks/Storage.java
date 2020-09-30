@@ -19,7 +19,7 @@ public class Storage {
     /**
      * This function updates the file in terms of adding new lines to an existing file.
      * This function is used for new tasks.
-     * @param tasks
+     * @param tasks the arraylist of tasks.
      */
     public static void updateFile(Task tasks) {
         try {
@@ -37,7 +37,7 @@ public class Storage {
     /**
      * This function updates the file in terms of modifying existing lines in the file.
      * This function is used while setting a task as done, or while deleting a task.
-     * @param tasks
+     * @param tasks the arraylist of tasks.
      */
     public static void refreshFile(ArrayList<Task> tasks) {
         try {
@@ -55,7 +55,7 @@ public class Storage {
     /**
      * This function scans for duke.txt. If the function detects the file, it prints out a message
      * and does nothing. Otherwise, duke.txt is created and the directory is shown to the user.
-     * @param duke
+     * @param duke the file object.
      */
     public static void createFile(File duke) {
         try {
@@ -147,7 +147,7 @@ public class Storage {
 
     /**
      * Returns the type of task for fileParser in a valid command format.
-     * @param input
+     * @param input the character in the saved file denoting the type of task.
      * @return type of task.
      */
     public static String getTaskType(char input) {

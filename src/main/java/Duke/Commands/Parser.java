@@ -1,10 +1,5 @@
 package Duke.Commands;
 
-import Duke.Duke;
-import Duke.Exceptions.InvalidCommandException;
-import Duke.Exceptions.InvalidFormatException;
-import Duke.Ui;
-
 /**
  * Takes the input by user and tells the main function what the command is. Uses the CommandType
  * enum to reduce chances of errors.

@@ -3,7 +3,6 @@ package Duke.Tasks;
 import Duke.Exceptions.InvalidCommandException;
 import Duke.Exceptions.InvalidFormatException;
 import Duke.Ui;
-import com.sun.source.util.TaskListener;
 
 import java.util.ArrayList;
 
@@ -126,7 +125,13 @@ public class TaskList {
         }
     }
 
-<<<<<<< HEAD
+    /**
+     * Displays the tasks that corresponds with user input. If the additional
+     * input is empty, it prints out the whole list.
+     * @param listCount the number of tasks in the list.
+     * @param tasks the arraylist of tasks.
+     * @param input the user's input after "find ".
+     */
     public static void displayFind(int listCount, ArrayList<Task> tasks, String input) {
         final int IS_FIND_OFFSET = 5;
         int i;
@@ -144,7 +149,6 @@ public class TaskList {
         }
     }
 
-=======
     /**
      * Creates a traditional task.
      * @param input the user input.
@@ -152,9 +156,8 @@ public class TaskList {
      * @param tasks the arraylist of tasks.
      * @param initialize boolean of whether the command is input during startup or by user.
      * @return listCount
-     * @throws InvalidCommandException
+     * @throws InvalidCommandException command is not valid.
      */
->>>>>>> branch-A-JavaDoc
     public static int createTraditionalTask(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidCommandException {
         //Accepts "todo", "deadline" and "event" without spaces as traditional tasks.
@@ -179,7 +182,7 @@ public class TaskList {
      * @param tasks the arraylist of tasks.
      * @param initialize boolean of whether the command is input during startup or by user.
      * @return listCount
-     * @throws InvalidCommandException
+     * @throws InvalidCommandException command is not valid.
      */
     public static int createToDo(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidCommandException {
@@ -204,7 +207,7 @@ public class TaskList {
      * @param tasks the arraylist of tasks.
      * @param initialize boolean of whether the command is input during startup or by user.
      * @return listCount
-     * @throws InvalidCommandException
+     * @throws InvalidCommandException command is not valid.
      */
     public static int createEvent(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidFormatException, InvalidCommandException {
@@ -262,7 +265,7 @@ public class TaskList {
      * @param tasks the arraylist of tasks.
      * @param initialize boolean of whether the command is input during startup or by user.
      * @return listCount
-     * @throws InvalidCommandException
+     * @throws InvalidCommandException command is not valid.
      */
     public static int createDeadline(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidFormatException, InvalidCommandException {
