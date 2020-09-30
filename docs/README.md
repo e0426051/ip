@@ -6,9 +6,9 @@
     + [2. todo](#2-add-a-todo-task-todo-)
     + [3. deadline](#3-add-a-deadline-task-deadline-)
     + [4. event](#4-add-a-event-task-event-)
-    + [5. done](#5-mark-task-as-done-done)
-    + [6. delete](#6-delete-a-task-delete)
-    + [7. find](#7-find-tasks-find)
+    + [5. done](#5-mark-task-as-done-done-)
+    + [6. delete](#6-delete-a-task-delete-)
+    + [7. find](#7-find-tasks-find-)
     + [8. bye](#8-exit-application-bye)
     + [9. *traditional tasks*](#9-others)
 * [Other Exceptions](#other-exceptions)
@@ -80,7 +80,7 @@ Exceptions: The program will display an error message `Invalid command.` if you 
 The program will display an error message `Invalid format. Please check your syntax.` for all other syntax errors, such as an empty description, a lack
 of "/by " in the input, or an empty deadline in the input.
 
-### 4. Add an event task `event`
+### 4. Add an event task `event `
 Adds a `event` task into the list.
 ##### Format
 Format: `event [task description] /on [occurrence]`. The [occurrence] is in string format so it can be e.g. "yesterday" as well.
@@ -96,7 +96,7 @@ Exceptions: The program will display an error message `Invalid command.` if you 
 The program will display an error message `Invalid format. Please check your syntax.` for all other syntax errors, such as an empty description, a lack
 of "/on " in the input, or an empty occurrance in the input.
 
-### 5. Mark task as done `done`
+### 5. Mark task as done `done `
 Marks the specified task as done. If the task is already done, a message `This task is already done!` will be shown.
 ##### Format
 Format: `done [task number]`
@@ -114,7 +114,7 @@ character in its place. If the number you typed is not valid, e.g. `0` or `3` wh
 `Invalid task number or task does not exist. Please try again.`.
 
 
-### 6. Delete a task `delete`
+### 6. Delete a task `delete `
 Deletes the specified task from the list **AND** duke.txt immediately. Please exercise caution before deleting a task.
 ##### Format
 Format: `delete [task number]`
@@ -129,7 +129,7 @@ Exceptions: The program will display an error message `Invalid task number or in
 such as if you typed `delete ` without a task number, typed a non-number character instead, or typed a number that is not valid.
 
 
-### 7. Find tasks `find`
+### 7. Find tasks `find `
 Finds tasks with the specified keyword. Also searches in the date section in Deadlines and Events. If you enter `find ` without a keyword, the entire
 list is printed out.
 ##### Format
