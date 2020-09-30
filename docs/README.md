@@ -45,6 +45,7 @@ Usage: `list`
 Outcome: 
 
 `Here are the tasks in your list:`
+
 `1. [T][✓] eat breakfast`
 ##### Exceptions
 Exceptions: None. This command will always run.
@@ -60,7 +61,9 @@ Usage: `todo finish homework`
 Outcome:
 
 `Got it. I've added this task: `
+
 `  [T][✘] finish homework`
+
 `Now you have 8 tasks in the list.`
 ##### Exceptions
 Exceptions: The program will display an error message `Invalid command.` if you type `todo ` without a task description.
@@ -76,7 +79,9 @@ Usage: `deadline finish homework /by tommorrow`
 Outcome:
 
 `Got it. I've added this task:` 
+
 `  [D][✘] finish homework (by: tommorrow)`
+
 `Now you have 6 tasks in the list.`
 ##### Exceptions
 Exceptions: The program will display an error message `Invalid command.` if you type `deadline ` without a task description **nor** the deadline.
@@ -93,7 +98,9 @@ Usage: `event midterms /on friday`
 Outcome:
 
 `Got it. I've added this task:` 
+
 `  [E][✘] midterms (on: friday)`
+
 `Now you have 2 tasks in the list.`
 ##### Exceptions
 Exceptions: The program will display an error message `Invalid command.` if you type `event ` without a task description **nor** the occurrance.
@@ -110,6 +117,7 @@ Usage: `done 3`
 Outcome:
 
 `Nice! I've marked this task as done: `
+
 `  [✓] movies`
 
 Outcome:
@@ -131,6 +139,7 @@ Usage: `delete 3`
 Outcome:
 
 `Noted. I've removed this task: `
+
 `  [✓] lunch`
 ##### Exceptions
 Exceptions: The program will display an error message `Invalid task number or input is not a number. No items are deleted.` for all invalid inputs,
@@ -148,7 +157,9 @@ Usage: `find homework`
 Outcome:
 
 `Here are the matching tasks in your list:`
+
 `1. [✓] all the homework`
+
 `2. [E][✘] midterms (on: the day without homework)`
 ##### Exceptions
 Exceptions: None.
