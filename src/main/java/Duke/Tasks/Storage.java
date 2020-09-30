@@ -16,6 +16,11 @@ import Duke.Ui;
 
 public class Storage {
 
+    /**
+     * This function updates the file in terms of adding new lines to an existing file.
+     * This function is used for new tasks.
+     * @param tasks
+     */
     public static void updateFile(Task tasks) {
         try {
             //FileWriter dukeSave = new FileWriter("./duke.txt", true);
@@ -29,6 +34,11 @@ public class Storage {
         }
     }
 
+    /**
+     * This function updates the file in terms of modifying existing lines in the file.
+     * This function is used while setting a task as done, or while deleting a task.
+     * @param tasks
+     */
     public static void refreshFile(ArrayList<Task> tasks) {
         try {
             //FileWriter dukeUpdate = new FileWriter("./duke.txt", false);
@@ -42,6 +52,11 @@ public class Storage {
         }
     }
 
+    /**
+     * This function scans for duke.txt. If the function detects the file, it prints out a message
+     * and does nothing. Otherwise, duke.txt is created and the directory is shown to the user.
+     * @param duke
+     */
     public static void createFile(File duke) {
         try {
             if (duke.exists()) {
@@ -67,6 +82,13 @@ public class Storage {
         }
     }
 
+    /**
+     * This function takes duke.txt and transform each line into a valid command,
+     * so that the commands can be added during startup of the program.
+     * @param tasks the arraylist of tasks.
+     * @param listCount the variable tracking the number of tasks in the arraylist.
+     * @return listCount
+     */
     public static int fileParser(ArrayList<Task> tasks, int listCount) {
         //createFile(new File("./duke.txt"));
         //Path path = Paths.get("./duke.txt");
@@ -100,7 +122,13 @@ public class Storage {
         return listCount;
     }
 
-
+    /**
+     * This function reformats the syntax of dates in deadlines and events while loading
+     * duke.txt into the programs.
+     * @param input the line of data in duke.txt.
+     * @param taskType the type of task. Ignores traditional tasks and todo which has no dates.
+     * @return input.trim()
+     */
     public static String reformatDate(String input, char taskType) {
 
         switch (taskType) {
@@ -117,6 +145,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Returns the type of task for fileParser in a valid command format.
+     * @param input
+     * @return type of task.
+     */
     public static String getTaskType(char input) {
 
         switch (input) {
@@ -136,6 +169,14 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads duke.txt at startup by fileParser after fileParser reformats the data
+     * in duke.txt into valid commands.
+     * @param input the augmented data in valid format.
+     * @param listCount the number of tasks in the list.
+     * @param tasks the arraylist of tasks.
+     * @return listCount
+     */
     public static int loadFileAtStartup(String input, int listCount, ArrayList<Task> tasks) {
 
         String commandType = Parser.parse(input);
