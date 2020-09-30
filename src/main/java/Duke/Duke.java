@@ -46,8 +46,7 @@ public class Duke {
                 listCount = TaskList.deleteTask(input, TaskList.tasks, listCount);
                 break;
             case "FIND":
-                //stub
-                System.out.println("Stub");
+                TaskList.displayFind(listCount, TaskList.tasks, input);
                 break;
             case "DEADLINE":
                 try {

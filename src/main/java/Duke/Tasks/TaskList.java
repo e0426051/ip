@@ -3,6 +3,7 @@ package Duke.Tasks;
 import Duke.Exceptions.InvalidCommandException;
 import Duke.Exceptions.InvalidFormatException;
 import Duke.Ui;
+import com.sun.source.util.TaskListener;
 
 import java.util.ArrayList;
 
@@ -125,6 +126,25 @@ public class TaskList {
         }
     }
 
+<<<<<<< HEAD
+    public static void displayFind(int listCount, ArrayList<Task> tasks, String input) {
+        final int IS_FIND_OFFSET = 5;
+        int i;
+        int j = 0;
+        int lastNrPosition = input.length();
+        String sub = input.substring(IS_FIND_OFFSET, lastNrPosition);
+        Ui.displayFindMessage();
+        for (i = 0; i < listCount; i++) {
+            if (tasks.get(i).getDescription() != null && (tasks.get(i).
+                    getDescription().contains(sub)) ||
+                    tasks.get(i).getTime().contains(sub)) {
+                Ui.displayList(j, tasks.get(i).toString());
+                j++;
+            }
+        }
+    }
+
+=======
     /**
      * Creates a traditional task.
      * @param input the user input.
@@ -134,6 +154,7 @@ public class TaskList {
      * @return listCount
      * @throws InvalidCommandException
      */
+>>>>>>> branch-A-JavaDoc
     public static int createTraditionalTask(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
             throws InvalidCommandException {
         //Accepts "todo", "deadline" and "event" without spaces as traditional tasks.

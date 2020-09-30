@@ -139,14 +139,19 @@ public class Ui {
         System.out.println("  [T][" + status + "] " + description);
     }
 
+
     /**
      * Prints out the list of tasks.
-     * @param Number the number of the corresponding task.
+     * @param number the number of the corresponding task.
      * @param info the description and date/time of the task where applicable.
      */
-    public static void displayList(int Number, String info) {
+    public static void displayList(int number, String info) {
         final int ARRAY_OFFSET = 1;
-        System.out.println(Number + ARRAY_OFFSET + ". " + info);
+        System.out.println(number + ARRAY_OFFSET + ". " + info);
+    }
+
+    public static void displayFindMessage() {
+        System.out.println("Here are the matching tasks in your list:");
     }
 
     public static void displayTask(String info) {
