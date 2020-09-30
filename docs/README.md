@@ -19,7 +19,7 @@
 ## Quick Start Guide
 1. Install Java 11 on your computer. Refrain from using other versions to minimize unexpected runtime errors.
 2. Download duke.jar to your computer. Place duke.jar in a non-restricted folder to minimize I/O errors. An example of a restricted folder in Windows may be the root directory `C:\`.
-3. Use `cd` command to navigate to the correct folder and run the program using `java -jar duke.jar`
+3. Use `cd` command to navigate to the correct folder and run the program using `java -jar duke.jar`. The `cd` navigation is important as duke will only search the current directory for the file, and not the root directory of the duke program itself automatically.
 4. If you are a new user, the program will create a duke.txt file. Please do not delete this file as it contains all your tasks.
 
 ## Features 
