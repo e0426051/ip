@@ -53,7 +53,7 @@ of "/by " in the input, or an empty deadline in the input.
 ### 4. Add an event task `event`
 Adds a `event` task into the list.
 ##### Format
-Format: `event [task description] /on [occurrance]`. The [occurrance] is in string format so it can be e.g. "yesterday" as well.
+Format: `event [task description] /on [occurrence]`. The [occurrence] is in string format so it can be e.g. "yesterday" as well.
 ##### Usage
 Usage: `event midterms /on friday`
 ##### Exceptions
@@ -119,11 +119,13 @@ Exceptions: None.
 You may experience these errors in different situations:
 
 ### 1. I/O type of errors
+
 ##### Examples
 1. `I/O error. File not found or corrupt.`
 2. `There is a problem preventing a new file from being created.`
 3. `Unable to create file! Reason: [Reason]`
 4. `File not found error.`
+
 ##### Solutions
 Move the jar file to another folder with proper access. For example, refrain from using restricted directories such as `C:\` or `C:\Windows\System32`.
 
