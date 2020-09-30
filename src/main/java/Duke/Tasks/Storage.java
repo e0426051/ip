@@ -102,9 +102,16 @@ public class Storage {
                 char isDone = position.charAt(4);
                 char tradIsDone = position.charAt(1);
                 String taskType = getTaskType(position.charAt(1));
-                String inputFormat = taskType + reformatDate(position.split(" ", 2)[1],
-                        position.charAt(1));
-                listCount = loadFileAtStartup(inputFormat, listCount, tasks);
+                String checkSpace = Character.toString(position.charAt(4));
+                //Fixes scenarios where a traditional task begins with a space
+                if (checkSpace.equals(" ")){
+                    String description = position.substring(4);
+                    listCount = loadFileAtStartup(description, listCount, tasks);
+                } else {
+                    String inputFormat = taskType + reformatDate(position.split(" ", 2)[1],
+                            position.charAt(1));
+                    listCount = loadFileAtStartup(inputFormat, listCount, tasks);
+                }
 
                 if (isDone == '\u2713' || tradIsDone == '\u2713') {
                     tasks.get(tasks.size() - 1).setAsDone();
