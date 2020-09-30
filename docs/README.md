@@ -3,13 +3,13 @@
 * [Quick Start Guide](#quick-start-guide)
 * [Features](#features)
     + [1. list](#1-list-the-current-task-list-list)
-    + [2. todo](#2-todo)
-    + [3. deadline](#3-deadline)
-    + [4. event](#4-event)
-    + [5. done](#5-done)
-    + [6. delete](#6-delete)
-    + [7. find](#7-find)
-    + [8. bye](#8-bye)
+    + [2. todo](#2-add-a-todo-task-todo)
+    + [3. deadline](#3-add-a-deadline-task-deadline)
+    + [4. event](#4-add-a-event-task-event)
+    + [5. done](#5-mark-task-as-done-done)
+    + [6. delete](#6-delete-a-task-delete)
+    + [7. find](#7-find-tasks-find)
+    + [8. bye](#8-exit-application-bye)
     + [9. *traditional tasks*](#9-others)
 * [Other Exceptions](#other-exceptions)
 * [FAQ](#faq)
@@ -114,7 +114,7 @@ character in its place. If the number you typed is not valid, e.g. `0` or `3` wh
 `Invalid task number or task does not exist. Please try again.`.
 
 
-### 6. delete
+### 6. Delete a task `delete`
 Deletes the specified task from the list **AND** duke.txt immediately. Please exercise caution before deleting a task.
 ##### Format
 Format: `delete [task number]`
@@ -129,7 +129,7 @@ Exceptions: The program will display an error message `Invalid task number or in
 such as if you typed `delete ` without a task number, typed a non-number character instead, or typed a number that is not valid.
 
 
-### 7. find
+### 7. Find tasks `find`
 Finds tasks with the specified keyword. Also searches in the date section in Deadlines and Events. If you enter `find ` without a keyword, the entire
 list is printed out.
 ##### Format
@@ -145,7 +145,7 @@ Outcome:
 Exceptions: None.
 
 
-### 8. bye
+### 8. Exit application `bye`
 Exits the application. The data entered have been saved into duke.txt. If required, please backup this file for safekeeping purposes.
 ##### Format
 Format: `bye` **without any arguments.**
