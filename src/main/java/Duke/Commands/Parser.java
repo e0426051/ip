@@ -1,10 +1,11 @@
-package Duke.Commands;
+package duke.commands;
 
 /**
  * Takes the input by user and tells the main function what the command is. Uses the CommandType
  * enum to reduce chances of errors.
  */
 public class Parser {
+
     final static int PRESENT = 0;
 
     public static String parse (String input) {

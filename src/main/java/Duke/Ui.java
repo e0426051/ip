@@ -1,4 +1,4 @@
-package Duke;
+package duke;
 
 public class Ui {
 
@@ -15,6 +15,7 @@ public class Ui {
         System.out.println("What can I do for you?");
     }
 
+
     /**
      * Displays the task removal message. Used during task deletion.
      */
@@ -26,8 +27,8 @@ public class Ui {
      * Displays error message, when the supplied task number to the
      * delete function is not valid.
      */
-    public static void displayDeleteIndexOutOfBoundsError() {
-        System.out.println("Invalid task number. No items are deleted.");
+    public static void displayDeleteError() {
+        System.out.println("Invalid task number or input is not a number. No items are deleted.");
     }
 
     /**
@@ -47,7 +48,7 @@ public class Ui {
     /**
      * Displays error message, when number supplied to "mark as done" function is not valid.
      */
-    public static void taskErrorMessage() {
+    public static void displayTaskErrorMessage() {
         System.out.println("Invalid task number or task does not exist. Please try again.");
     }
 
@@ -175,7 +176,7 @@ public class Ui {
     /**
      * Displays error message related to duke.txt.
      */
-    public static void displayIOError() {
+    public static void displayIoError() {
         System.out.println("I/O error. File not found or corrupt.");
     }
 

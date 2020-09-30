@@ -1,4 +1,4 @@
-package Duke.Exceptions;
+package duke.exceptions;
 
 /**
  * Exception that is thrown when the user enters an invalid command.

@@ -1,18 +1,22 @@
-package Duke.Tasks;
+package duke.tasks;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Duke.Commands.Parser;
-import Duke.Exceptions.InvalidCommandException;
-import Duke.Exceptions.InvalidFormatException;
-import Duke.Ui;
+import duke.commands.Parser;
+
+import duke.exceptions.InvalidCommandException;
+import duke.exceptions.InvalidFormatException;
+
+import duke.Ui;
 
 public class Storage {
 
@@ -23,14 +27,13 @@ public class Storage {
      */
     public static void updateFile(Task tasks) {
         try {
-            //FileWriter dukeSave = new FileWriter("./duke.txt", true);
             FileWriter dukeSave = new FileWriter("duke.txt", true);
             BufferedWriter duke = new BufferedWriter(dukeSave);
             duke.write(tasks.toString());
             duke.newLine();
             duke.close();
         } catch (IOException e) {
-            Ui.displayIOError();
+            Ui.displayIoError();
         }
     }
 
@@ -41,14 +44,13 @@ public class Storage {
      */
     public static void refreshFile(ArrayList<Task> tasks) {
         try {
-            //FileWriter dukeUpdate = new FileWriter("./duke.txt", false);
             FileWriter dukeUpdate = new FileWriter("duke.txt", false);
             for (Task task : tasks) {
                 dukeUpdate.write(String.format("%s\n", task.toString()));
             }
             dukeUpdate.close();
         } catch (IOException e) {
-            Ui.displayIOError();
+            Ui.displayIoError();
         }
     }
 
@@ -63,20 +65,11 @@ public class Storage {
                 Ui.displayFilePresentMessage();
                 return;
             }
-            /*
-            if (!duke.getParentFile().exists()) {
-                boolean isDirectoryMade = duke.getParentFile().mkdirs();
-                boolean isFileMade = duke.createNewFile();
-                boolean isStructureMade = (isDirectoryMade && isFileMade);
-                Ui.displayFileNotPresentMessage(duke.getAbsolutePath(), isStructureMade);
-            }
 
-             */
-            if(!duke.exists()) {
+            if (!duke.exists()) {
                 boolean isFileMade = duke.createNewFile();
                 Ui.displayFileNotPresentMessage(duke.getAbsolutePath(), isFileMade);
             }
-
         } catch (IOException e) {
             Ui.displayMakeFileError(e.getMessage());
         }
@@ -89,18 +82,17 @@ public class Storage {
      * @param listCount the variable tracking the number of tasks in the arraylist.
      * @return listCount
      */
-    public static int fileParser(ArrayList<Task> tasks, int listCount) {
-        //createFile(new File("./duke.txt"));
-        //Path path = Paths.get("./duke.txt");
+    public static int parseFile(ArrayList<Task> tasks, int listCount) {
         createFile(new File("duke.txt"));
         Path path = Paths.get("duke.txt");
-
         Scanner loadFile = null;
+
         try {
             loadFile = new Scanner(path);
         } catch (IOException e) {
             Ui.displayFileNotFoundError();
         }
+
         assert loadFile != null;
         loadFile.useDelimiter("\n");
 
@@ -113,9 +105,9 @@ public class Storage {
                 String inputFormat = taskType + reformatDate(position.split(" ", 2)[1],
                         position.charAt(1));
                 listCount = loadFileAtStartup(inputFormat, listCount, tasks);
+
                 if (isDone == '\u2713' || tradIsDone == '\u2713') {
-                    tasks.get(tasks.size() - 1).markAsDone();
-                    //tasks.get(listCount - 1).markAsDone();
+                    tasks.get(tasks.size() - 1).setAsDone();
                 }
             }
         }
@@ -178,7 +170,6 @@ public class Storage {
      * @return listCount
      */
     public static int loadFileAtStartup(String input, int listCount, ArrayList<Task> tasks) {
-
         String commandType = Parser.parse(input);
 
         switch (commandType) {

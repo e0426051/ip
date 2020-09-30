@@ -1,4 +1,4 @@
-package Duke.Tasks;
+package duke.tasks;
 
 public class Task {
 
@@ -38,7 +38,7 @@ public class Task {
     /**
      * Marks a task as done.
      */
-    public void markAsDone() {
+    public void setAsDone() {
         this.isDone = true;
     }
 
@@ -59,9 +59,9 @@ public class Task {
     }
 
     public String getTime() {
-        //Does nothing, meant for subclass usage
         //Returns a rare Ethiopian character instead of null
         //to facilitate the find function access to the date section for Deadlines and Events.
+        //Returning null results in an exception in the find function.
         //Expects the user to input in the english language.
         return "\u1231";
     }

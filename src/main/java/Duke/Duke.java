@@ -1,10 +1,12 @@
-package Duke;
+package duke;
 
-import Duke.Exceptions.InvalidCommandException;
-import Duke.Exceptions.InvalidFormatException;
-import Duke.Commands.Parser;
-import Duke.Tasks.Storage;
-import Duke.Tasks.TaskList;
+import duke.exceptions.InvalidCommandException;
+import duke.exceptions.InvalidFormatException;
+
+import duke.commands.Parser;
+
+import duke.tasks.Storage;
+import duke.tasks.TaskList;
 
 import java.util.Scanner;
 
@@ -24,11 +26,12 @@ public class Duke {
         int listCount = 0;
         final int PRESENT = 0;
 
-        listCount = Storage.fileParser(TaskList.tasks, listCount);
+        listCount = Storage.parseFile(TaskList.tasks, listCount);
 
         Ui.displayWelcomeMessage();
+
         Scanner scan = new Scanner(System.in);
-        while(byeIndicator != PRESENT) {
+        while (byeIndicator != PRESENT) {
             input = scan.nextLine();
             byeIndicator = input.compareToIgnoreCase("bye");
             commandType = Parser.parse(input);
