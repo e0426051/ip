@@ -2,8 +2,7 @@
 
 * [Quick Start Guide](#quick-start-guide)
 * [Features](#features)
-    + [1. help](#1-help)
-    + [1. list](#1-list)
+    + [1. list](#1-list the current task list list)
     + [2. todo](#2-todo)
     + [3. deadline](#3-deadline)
     + [4. event](#4-event)
