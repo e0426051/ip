@@ -1,4 +1,6 @@
-package duke;
+package duke.ui;
+
+import duke.tasks.TaskList;
 
 public class Ui {
 
@@ -140,7 +142,6 @@ public class Ui {
         System.out.println("  [T][" + status + "] " + description);
     }
 
-
     /**
      * Prints out the list of tasks.
      * @param number the number of the corresponding task.
@@ -191,13 +192,18 @@ public class Ui {
         System.out.println("duke.txt exists! Loading file contents...");
     }
 
+    /**
+     * Displays various messages when duke.txt is not found.
+     * @param directory the directory that does has duke.txt created.
+     * @param isFileMade boolean indicating duke.txt is successfully created.
+     */
     public static void displayFileNotPresentMessage(String directory, boolean isFileMade) {
         if (isFileMade) {
             System.out.println("duke.txt does NOT exist. A new file has been created.");
             System.out.println("duke.txt has been created at: " + directory);
             System.out.println("WARNING: Please do not move or delete duke.txt.");
         } else {
-            System.out.println("There is a problem preventing a new file from being created.");
+            System.out.println("There is a problem preventing duke.txt from being created.");
         }
     }
 
@@ -205,4 +211,24 @@ public class Ui {
         System.out.println("duke.txt is located at " + input);
     }
 
+    public static void displaySingleTask(String taskDescription, String taskType, String status, int position){
+        String temp;
+        switch (taskType) {
+        //Traditional tasks are tasks specified in Level-2
+        case "TRADITIONAL_TASK":
+            displayTraditionalTask(status, taskDescription);
+            break;
+        case "DEADLINE":
+            temp = TaskList.tasks.get(position).getTime();
+            displayDeadline(status, taskDescription, temp);
+            break;
+        case "EVENT":
+            temp = TaskList.tasks.get(position).getTime();
+            displayEvent(status, taskDescription, temp);
+            break;
+        case "TODO":
+            displayToDo(status, taskDescription);
+            break;
+        }
+    }
 }

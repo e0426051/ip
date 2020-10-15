@@ -3,7 +3,8 @@ package duke.tasks;
 import duke.exceptions.InvalidCommandException;
 import duke.exceptions.InvalidFormatException;
 
-import duke.Ui;
+import duke.ui.Ui;
+import duke.storage.Storage;
 
 import java.util.ArrayList;
 
@@ -16,9 +17,8 @@ public class TaskList {
         final int ARRAY_OFFSET = 1;
         int lastNrPosition = input.length();
         String sub = input.substring(DELETE_OFFSET, lastNrPosition);
-        int position = 0;
+        int position;
         String status;
-        String temp;
 
         try {
             position = Integer.parseInt(sub) - ARRAY_OFFSET;
@@ -29,24 +29,9 @@ public class TaskList {
         try {
             String taskType = tasks.get(position).getTaskType();
             status = tasks.get(position).getStatusIcon();
+            String taskDescription = tasks.get(position).getDescription();
             Ui.displayRemoveMessage();
-            switch (taskType) {
-                //Traditional tasks are tasks specified in Level-2
-                case "TRADITIONAL_TASK":
-                    Ui.displayTraditionalTask(status, tasks.get(position).getDescription());
-                    break;
-                case "DEADLINE":
-                    temp = tasks.get(position).getTime();
-                    Ui.displayDeadline(status, tasks.get(position).getDescription(), temp);
-                    break;
-                case "EVENT":
-                    temp = tasks.get(position).getTime();
-                    Ui.displayEvent(status, tasks.get(position).getDescription(), temp);
-                    break;
-                case "TODO":
-                    Ui.displayToDo(status, tasks.get(position).getDescription());
-                    break;
-            }
+            Ui.displaySingleTask(taskDescription, taskType, status, position);
             tasks.remove(position);
             listCount--;
             Storage.refreshFile(tasks);
@@ -54,7 +39,6 @@ public class TaskList {
         } catch (IndexOutOfBoundsException e) {
             Ui.displayDeleteError();
         }
-
         return listCount;
     }
 
@@ -66,52 +50,17 @@ public class TaskList {
      */
     public static void flagAsDone(String input, ArrayList<Task> tasks) {
         final int IS_DONE_OFFSET = 5;
-        final int ARRAY_OFFSET = 1;
-        int position = 0;
         int lastNrPosition = input.length();
-        boolean isError = false;
         String sub = input.substring(IS_DONE_OFFSET, lastNrPosition);
-        String temp;
-
-        try {
-            position = Integer.parseInt(sub) - ARRAY_OFFSET;
-            boolean alreadyDone = tasks.get(position).getStatus();
-            if (alreadyDone) {
-                Ui.displayTaskAlreadyDoneMessage();
-                return;
-            }
-        } catch (IndexOutOfBoundsException e) {
-            isError = true;
-        } catch (NumberFormatException e) {
-            Ui.displayNotNumberErrorMessage();
-            return;
-        }
-
-        try {
-            if (!isError) {
-                Ui.displayTaskDoneMessage();
-            }
+        int position = checkIsDone(sub);
+        if (position != -1) {
+            Ui.displayTaskDoneMessage();
             String taskType = tasks.get(position).getTaskType();
-            switch (taskType) {
-                case "TRADITIONAL_TASK":
-                    Ui.displayTraditionalTask("\u2713", tasks.get(position).getDescription());
-                    break;
-                case "DEADLINE":
-                    temp = tasks.get(position).getTime();
-                    Ui.displayDeadline("\u2713", tasks.get(position).getDescription(), temp);
-                    break;
-                case "EVENT":
-                    temp = tasks.get(position).getTime();
-                    Ui.displayEvent("\u2713", tasks.get(position).getDescription(), temp);
-                    break;
-                case "TODO":
-                    Ui.displayToDo("\u2713", tasks.get(position).getDescription());
-                    break;
-            }
+            String taskDescription = tasks.get(position).getDescription();
+            String tick = "\u2713";
+            Ui.displaySingleTask(taskDescription, taskType, tick, position);
             tasks.get(position).setAsDone();
             Storage.refreshFile(tasks);
-        } catch (IndexOutOfBoundsException e) {
-            Ui.displayTaskErrorMessage();
         }
     }
 
@@ -124,9 +73,7 @@ public class TaskList {
         int i;
         Ui.displayListMessage();
         for (i = 0; i < listCount; i++) {
-            if (tasks.get(i).getDescription() != null) {
-                Ui.displayList(i, tasks.get(i).toString());
-            }
+            Ui.displayList(i, tasks.get(i).toString());
         }
     }
 
@@ -134,10 +81,9 @@ public class TaskList {
      * Displays the tasks that corresponds with user input. If the additional
      * input is empty, it prints out the whole list.
      * @param listCount the number of tasks in the list.
-     * @param tasks the arraylist of tasks.
      * @param input the user's input after "find ".
      */
-    public static void displayFind(int listCount, ArrayList<Task> tasks, String input) {
+    public static void displayFind(int listCount, String input) {
         final int IS_FIND_OFFSET = 5;
         int i;
         int j = 0;
@@ -145,13 +91,17 @@ public class TaskList {
         String sub = input.substring(IS_FIND_OFFSET, lastNrPosition);
         Ui.displayFindMessage();
         for (i = 0; i < listCount; i++) {
-            if (tasks.get(i).getDescription() != null && (tasks.get(i).
-                    getDescription().contains(sub)) ||
-                    tasks.get(i).getTime().contains(sub)) {
-                Ui.displayList(j, tasks.get(i).toString());
-                j++;
-            }
+            j += matchResult(i, sub, j);
         }
+    }
+
+    public static int matchResult(int taskNumber, String input, int subListCount) {
+        if ((tasks.get(taskNumber).getDescription().contains(input)) ||
+                tasks.get(taskNumber).getTime().contains(input)) {
+            Ui.displayList(subListCount, tasks.get(taskNumber).toString());
+            return 1;
+        }
+        return 0;
     }
 
     /**
@@ -215,54 +165,26 @@ public class TaskList {
      * @param tasks the arraylist of tasks.
      * @param initialize boolean of whether the command is input during startup or by user.
      * @return listCount
-     * @throws InvalidCommandException command is not valid.
      */
-    public static int createEvent(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
-            throws InvalidFormatException, InvalidCommandException {
-        final int INVALID = 0;
-        int checkValid = input.compareTo("event ");
-        if (checkValid == INVALID) {
-            throw new InvalidCommandException();
-        }
+    public static int createEvent(String input, int listCount, ArrayList<Task> tasks, boolean initialize) {
+
         final int EVENT_OFFSET = 6;
         final int BY_ON_OFFSET = 3;
-        final int SLASH_ON_SPACE_OFFSET = 4;
-        final int SLASH_NOT_FOUND = -1;
-        final String INVALID_INPUT = "INV";
-        String on;
-        String inputTaskDescription;
+
         int position;
         position = input.indexOf("/");
-        String checkMinInputFormat;
-
-        if (position != SLASH_NOT_FOUND) {
-            checkMinInputFormat = input.substring(position);
-        } else {
-            checkMinInputFormat = INVALID_INPUT;
+        try {
+            checkEventFormat(input);
+        } catch (InvalidFormatException e) {
+            Ui.displayInvalidFormat();
+            return listCount;
+        } catch (InvalidCommandException e) {
+            Ui.displayInvalidCommand();
+            return listCount;
         }
 
-        boolean isValidFormat;
-        if (checkMinInputFormat.length() >= SLASH_ON_SPACE_OFFSET) {
-            String checkFormat = input.substring(position, position + BY_ON_OFFSET + 1);
-            isValidFormat = checkFormat.equalsIgnoreCase("/on ");
-        } else {
-            isValidFormat = false;
-        }
-
-        if (position == EVENT_OFFSET) {
-            throw new InvalidFormatException();
-        } else if (!isValidFormat) {
-            throw new InvalidFormatException();
-        } else {
-            String checkDate = input.substring(position + BY_ON_OFFSET + 1);
-            boolean isEmpty = checkDate.isEmpty();
-            if (isEmpty) {
-                throw new InvalidFormatException();
-            }
-        }
-
-        inputTaskDescription = input.substring(EVENT_OFFSET, position);
-        on = input.substring(position + BY_ON_OFFSET);
+        String inputTaskDescription = input.substring(EVENT_OFFSET, position);
+        String on = input.substring(position + BY_ON_OFFSET);
         tasks.add(listCount, new Event(inputTaskDescription, on));
 
         if (!initialize) {
@@ -273,16 +195,53 @@ public class TaskList {
     }
 
     /**
-     * Creates a deadline.
-     * @param input the user input.
-     * @param listCount the number of tasks in the list.
-     * @param tasks the arraylist of tasks.
-     * @param initialize boolean of whether the command is input during startup or by user.
-     * @return listCount
-     * @throws InvalidCommandException command is not valid.
+     * Checks whether the format of Event or Deadline is valid
+     * @param input input by the user.
+     * @throws InvalidCommandException invalid command entered.
+     * @throws InvalidFormatException invalid format entered.
      */
-    public static int createDeadline(String input, int listCount, ArrayList<Task> tasks, boolean initialize)
-            throws InvalidFormatException, InvalidCommandException {
+    public static void checkEventFormat(String input)
+            throws InvalidCommandException, InvalidFormatException{
+        final int INVALID = 0;
+        int checkValid = input.compareTo("event ");
+        if (checkValid == INVALID) {
+            throw new InvalidCommandException();
+        }
+        final int EVENT_OFFSET = 6;
+        final int BY_ON_OFFSET = 3;
+        final int SLASH_ON_SPACE_OFFSET = 4;
+        final int SLASH_NOT_FOUND = -1;
+        final String INVALID_INPUT = "INV";
+        int position;
+        position = input.indexOf("/");
+        String checkMinInputFormat;
+
+        if (position != SLASH_NOT_FOUND) {
+            checkMinInputFormat = input.substring(position);
+        } else {
+            checkMinInputFormat = INVALID_INPUT;
+        }
+        boolean isValidFormat;
+        if (checkMinInputFormat.length() >= SLASH_ON_SPACE_OFFSET) {
+            String checkFormat = input.substring(position, position + BY_ON_OFFSET + 1);
+            isValidFormat = checkFormat.equalsIgnoreCase("/on ");
+        } else {
+            isValidFormat = false;
+        }
+
+        if (position == EVENT_OFFSET || !isValidFormat) {
+            throw new InvalidFormatException();
+        } else {
+            String checkDate = input.substring(position + BY_ON_OFFSET + 1);
+            boolean isEmpty = checkDate.isEmpty();
+            if (isEmpty) {
+                throw new InvalidFormatException();
+            }
+        }
+    }
+
+    public static void checkDeadlineFormat(String input)
+            throws InvalidCommandException, InvalidFormatException {
         final int INVALID = 0;
         int checkValid = input.compareTo("deadline ");
         if (checkValid == INVALID) {
@@ -294,8 +253,6 @@ public class TaskList {
         final int SLASH_BY_SPACE_OFFSET = 4;
         final int SLASH_NOT_FOUND = -1;
         final String INVALID_INPUT = "INV";
-        String by;
-        String inputTaskDescription;
         int position;
         position = input.indexOf("/");
         String checkMinInputFormat;
@@ -325,9 +282,35 @@ public class TaskList {
                 throw new InvalidFormatException();
             }
         }
+    }
 
-        inputTaskDescription = input.substring(DEADLINE_OFFSET, position);
-        by = input.substring(position + BY_ON_OFFSET);
+    /**
+     * Creates a deadline.
+     * @param input the user input.
+     * @param listCount the number of tasks in the list.
+     * @param tasks the arraylist of tasks.
+     * @param initialize boolean of whether the command is input during startup or by user.
+     * @return listCount
+     */
+    public static int createDeadline(String input, int listCount, ArrayList<Task> tasks, boolean initialize) {
+        final int BY_ON_OFFSET = 3;
+        final int DEADLINE_OFFSET = 9;
+
+        int position;
+        position = input.indexOf("/");
+
+        try {
+            checkDeadlineFormat(input);
+        } catch (InvalidFormatException e) {
+            Ui.displayInvalidFormat();
+            return listCount;
+        } catch (InvalidCommandException e) {
+            Ui.displayInvalidCommand();
+            return listCount;
+        }
+
+        String inputTaskDescription = input.substring(DEADLINE_OFFSET, position);
+        String by = input.substring(position + BY_ON_OFFSET);
         tasks.add(listCount, new Deadline(inputTaskDescription, by));
 
         if (!initialize) {
@@ -345,5 +328,29 @@ public class TaskList {
         return listCount;
     }
 
-
+    /**
+     * This function checks whether the task is already marked done.
+     * It returns the number of the task, or -1 if the task is already
+     * done or the input is not valid.
+     * @param sub a substring of the input.
+     * @return whether there is an error.
+     */
+    public static int checkIsDone(String sub){
+        final int ARRAY_OFFSET = 1;
+        try {
+            int position = Integer.parseInt(sub) - ARRAY_OFFSET;
+            boolean alreadyDone = tasks.get(position).getStatus();
+            if (alreadyDone) {
+                Ui.displayTaskAlreadyDoneMessage();
+                return -1;
+            }
+            return position;
+        } catch (IndexOutOfBoundsException e) {
+            Ui.displayTaskErrorMessage();
+            return -1;
+        } catch (NumberFormatException e) {
+            Ui.displayNotNumberErrorMessage();
+            return -1;
+        }
+    }
 }

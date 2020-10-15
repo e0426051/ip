@@ -1,4 +1,4 @@
-package duke.commands;
+package duke.parser;
 
 /**
  * This enum ensures that all commands are categorized into an appropriate command type.

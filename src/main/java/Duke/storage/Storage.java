@@ -1,4 +1,4 @@
-package duke.tasks;
+package duke.storage;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,12 +11,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import duke.commands.Parser;
+import duke.parser.Parser;
 
 import duke.exceptions.InvalidCommandException;
-import duke.exceptions.InvalidFormatException;
 
-import duke.Ui;
+import duke.ui.Ui;
+import duke.tasks.Task;
+import duke.tasks.TaskList;
 
 public class Storage {
 
@@ -104,16 +105,7 @@ public class Storage {
                 char tradIsDone = position.charAt(1);
                 String taskType = getTaskType(position.charAt(1));
                 String checkSpace = Character.toString(position.charAt(4));
-                //Fixes scenarios where a traditional task begins with a space
-                if (checkSpace.equals(" ")){
-                    String description = position.substring(4);
-                    listCount = loadFileAtStartup(description, listCount, tasks);
-                } else {
-                    String inputFormat = taskType + reformatDate(position.split(" ", 2)[1],
-                            position.charAt(1));
-                    listCount = loadFileAtStartup(inputFormat, listCount, tasks);
-                }
-
+                listCount = spaceChecker (checkSpace, position, taskType, tasks, listCount);
                 if (isDone == '\u2713' || tradIsDone == '\u2713') {
                     tasks.get(tasks.size() - 1).setAsDone();
                 }
@@ -122,6 +114,19 @@ public class Storage {
         return listCount;
     }
 
+    public static int spaceChecker (String checkSpace, String position,
+            String taskType, ArrayList<Task> tasks, int listCount) {
+        if (checkSpace.equals(" ")){
+            String description = position.substring(4);
+            listCount = loadFileAtStartup(description, listCount, tasks);
+            return listCount;
+        } else {
+            String inputFormat = taskType + reformatDate(position.split(" ", 2)[1],
+                    position.charAt(1));
+            listCount = loadFileAtStartup(inputFormat, listCount, tasks);
+            return listCount;
+        }
+    }
     /**
      * This function reformats the syntax of dates in deadlines and events while loading
      * duke.txt into the programs.
@@ -182,22 +187,10 @@ public class Storage {
 
         switch (commandType) {
             case "DEADLINE":
-                try {
-                    listCount = TaskList.createDeadline(input, listCount, tasks, true);
-                } catch (InvalidFormatException e) {
-                    Ui.displayInvalidFormat();
-                } catch (InvalidCommandException e) {
-                    Ui.displayInvalidCommand();
-                }
+                listCount = TaskList.createDeadline(input, listCount, tasks, true);
                 break;
             case "EVENT":
-                try {
                     listCount = TaskList.createEvent(input, listCount, tasks, true);
-                } catch (InvalidFormatException e) {
-                    Ui.displayInvalidFormat();
-                } catch (InvalidCommandException e) {
-                    Ui.displayInvalidCommand();
-                }
                 break;
             case "TODO":
                 try {

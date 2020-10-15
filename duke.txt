@@ -1,9 +1,19 @@
 [T][✓] fff
 [✓]  done 7
-[T][✓] finish homework
-[D][✘] finish homework (by: tommorrow)
+[D][✓] finish homework (by: tommorrow)
 [E][✘] midterms (on: friday)
 [✘]  done 7
 [✘] todo
 [✘]  done 7
-[E][✓] all the way (on: none of the)
+[E][✘] all the way (on: none of the)
+[✘]  deadline homework /b 2pm
+[E][✘] 3 (on: 7)
+[✘] sss
+[✘] ddd
+[✓] fff
+[✓] lisst
+[E][✘] 3 (on: 1)
+[D][✘] 3 (by: 6)
+[E][✘] 3 (on: 5)
+[✘] yie
+[T][✘] 5
