@@ -37,5 +37,4 @@ public class Duke {
             listCount = CommandRunner.commandRunner(input, commandType, listCount);
         }
     }
-
 }

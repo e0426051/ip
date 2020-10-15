@@ -294,7 +294,7 @@ public class TaskList {
 
         if (position == DEADLINE_OFFSET || !isValidFormat) {
             throw new InvalidFormatException();
-        }  else {
+        } else {
             String checkDate = input.substring(position + BY_ON_OFFSET + 1);
             boolean isEmpty = checkDate.isEmpty();
             if (isEmpty) {

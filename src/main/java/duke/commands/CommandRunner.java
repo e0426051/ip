@@ -11,8 +11,8 @@ public class CommandRunner {
      * Does not handle addition of tasks, which is dealt by taskRunner.
      * @param input input by user.
      * @param commandType type of command by parser.
-     * @param listCount
-     * @return
+     * @param listCount number of tasks.
+     * @return listCount number of tasks.
      */
     public static int commandRunner(String input, String commandType, int listCount) {
         switch (commandType) {
