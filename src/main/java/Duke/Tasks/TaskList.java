@@ -195,7 +195,7 @@ public class TaskList {
     }
 
     /**
-     * Checks whether the format of Event or Deadline is valid
+     * Checks whether the format of Event is valid.
      * @param input input by the user.
      * @throws InvalidCommandException invalid command entered.
      * @throws InvalidFormatException invalid format entered.
@@ -207,27 +207,15 @@ public class TaskList {
         if (checkValid == INVALID) {
             throw new InvalidCommandException();
         }
+
         final int EVENT_OFFSET = 6;
         final int BY_ON_OFFSET = 3;
-        final int SLASH_ON_SPACE_OFFSET = 4;
-        final int SLASH_NOT_FOUND = -1;
-        final String INVALID_INPUT = "INV";
         int position;
         position = input.indexOf("/");
-        String checkMinInputFormat;
+        String checkMinInputFormat = checkSlash(input, position);
 
-        if (position != SLASH_NOT_FOUND) {
-            checkMinInputFormat = input.substring(position);
-        } else {
-            checkMinInputFormat = INVALID_INPUT;
-        }
-        boolean isValidFormat;
-        if (checkMinInputFormat.length() >= SLASH_ON_SPACE_OFFSET) {
-            String checkFormat = input.substring(position, position + BY_ON_OFFSET + 1);
-            isValidFormat = checkFormat.equalsIgnoreCase("/on ");
-        } else {
-            isValidFormat = false;
-        }
+        boolean isValidFormat = checkFormat(checkMinInputFormat, input,
+                position, true);
 
         if (position == EVENT_OFFSET || !isValidFormat) {
             throw new InvalidFormatException();
@@ -240,6 +228,53 @@ public class TaskList {
         }
     }
 
+    /**
+     * Checks whether user inputs a slash in a event or deadline.
+     * @param input user's input.
+     * @param position the position of the slash in the string.
+     * @return the position of the slash, or -1 if no slash found.
+     */
+    public static String checkSlash(String input, int position) {
+        final int SLASH_NOT_FOUND = -1;
+        final String INVALID_INPUT = "INV";
+        if (position != SLASH_NOT_FOUND) {
+            return input.substring(position);
+        } else {
+            return INVALID_INPUT;
+        }
+    }
+
+    /**
+     * Checks the format of deadline and event tasks, specifically whether
+     * the user entered "/by " for deadlines or "/on " for events.
+     * @param checkLength the substring containing the keywords with the slash
+     * @param input the user's input.
+     * @param position position of the slash.
+     * @param isEvent whether the task is a event. If false, the task is a deadline.
+     * @return true if the keywords are found, and false if the keywords are not found.
+     */
+    public static boolean checkFormat(String checkLength, String input,
+            int position, boolean isEvent) {
+        final int BY_ON_OFFSET = 3;
+        final int FORMAT_OFFSET = 4;
+        if (checkLength.length() >= FORMAT_OFFSET) {
+            String checkFormat = input.substring(position, position + BY_ON_OFFSET + 1);
+            if (isEvent) {
+                return checkFormat.equalsIgnoreCase("/on ");
+            } else {
+                return checkFormat.equalsIgnoreCase("/by ");
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks whether the format of Deadline is valid.
+     * @param input input by the user.
+     * @throws InvalidCommandException invalid command entered.
+     * @throws InvalidFormatException invalid format entered.
+     */
     public static void checkDeadlineFormat(String input)
             throws InvalidCommandException, InvalidFormatException {
         final int INVALID = 0;
@@ -250,32 +285,16 @@ public class TaskList {
 
         final int BY_ON_OFFSET = 3;
         final int DEADLINE_OFFSET = 9;
-        final int SLASH_BY_SPACE_OFFSET = 4;
-        final int SLASH_NOT_FOUND = -1;
-        final String INVALID_INPUT = "INV";
         int position;
         position = input.indexOf("/");
-        String checkMinInputFormat;
+        String checkMinInputFormat = checkSlash(input, position);
 
-        if (position != SLASH_NOT_FOUND) {
-            checkMinInputFormat = input.substring(position);
-        } else {
-            checkMinInputFormat = INVALID_INPUT;
-        }
+        boolean isValidFormat = checkFormat(checkMinInputFormat, input,
+                position, false);
 
-        boolean isValidFormat;
-        if (checkMinInputFormat.length() >= SLASH_BY_SPACE_OFFSET) {
-            String checkFormat = input.substring(position, position + BY_ON_OFFSET + 1);
-            isValidFormat = checkFormat.equalsIgnoreCase("/by ");
-        } else {
-            isValidFormat = false;
-        }
-
-        if (position == DEADLINE_OFFSET) {
+        if (position == DEADLINE_OFFSET || !isValidFormat) {
             throw new InvalidFormatException();
-        } else if (!isValidFormat) {
-            throw new InvalidFormatException();
-        } else {
+        }  else {
             String checkDate = input.substring(position + BY_ON_OFFSET + 1);
             boolean isEmpty = checkDate.isEmpty();
             if (isEmpty) {

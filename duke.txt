@@ -1,7 +1,7 @@
 [T][✓] fff
 [✓]  done 7
 [D][✓] finish homework (by: tommorrow)
-[E][✘] midterms (on: friday)
+[E][✓] midterms (on: friday)
 [✘]  done 7
 [✘] todo
 [✘]  done 7
@@ -17,3 +17,5 @@
 [E][✘] 3 (on: 5)
 [✘] yie
 [T][✘] 5
+[E][✘] 3 (on: 4)
+[✘] re

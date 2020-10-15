@@ -1,6 +1,6 @@
 package duke;
 
-import duke.exceptions.InvalidCommandException;
+import duke.commands.CommandRunner;
 
 import duke.parser.Parser;
 
@@ -34,43 +34,8 @@ public class Duke {
             input = scan.nextLine();
             byeIndicator = input.compareToIgnoreCase("bye");
             commandType = Parser.parse(input);
-            switch (commandType) {
-            case "BYE":
-                Ui.displayByeMessage();
-                break;
-            case "LIST":
-                TaskList.displayList(listCount, TaskList.tasks);
-                break;
-            case "DONE":
-                TaskList.flagAsDone(input, TaskList.tasks);
-                break;
-            case "DELETE":
-                listCount = TaskList.deleteTask(input, TaskList.tasks, listCount);
-                break;
-            case "FIND":
-                TaskList.displayFind(listCount, input);
-                break;
-            case "DEADLINE":
-                listCount = TaskList.createDeadline(input, listCount, TaskList.tasks, false);
-                break;
-            case "EVENT":
-                listCount = TaskList.createEvent(input, listCount, TaskList.tasks, false);
-                break;
-            case "TODO":
-                try {
-                    listCount = TaskList.createToDo(input, listCount, TaskList.tasks, false);
-                } catch (InvalidCommandException e) {
-                    Ui.displayInvalidCommand();
-                }
-                break;
-            default:
-                try {
-                    listCount = TaskList.createTraditionalTask(input, listCount, TaskList.tasks, false);
-                } catch (InvalidCommandException e) {
-                    Ui.displayInvalidCommand();
-                }
-                break;
-            }
+            listCount = CommandRunner.commandRunner(input, commandType, listCount);
         }
     }
+
 }
