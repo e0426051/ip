@@ -137,16 +137,16 @@ public class Storage {
     public static String reformatDate(String input, char taskType) {
 
         switch (taskType) {
-            case 'D':
-                return input.trim().replace("(by:", "/by")
-                        .replace(")", "");
+        case 'D':
+            return input.trim().replace("(by:", "/by")
+                    .replace(")", "");
             //Fallthrough due to return
-            case 'E':
-                return input.trim().replace("(on:", "/on")
-                        .replace(")", "");
+        case 'E':
+            return input.trim().replace("(on:", "/on")
+                    .replace(")", "");
             //Fallthrough due to return
-            default:
-                return input.trim();
+        default:
+            return input.trim();
         }
     }
 
@@ -158,19 +158,19 @@ public class Storage {
     public static String getTaskType(char input) {
 
         switch (input) {
-            case 'T':
-                return "todo ";
+        case 'T':
+            return "todo ";
             //Fallthrough due to return
-            case 'D':
-                return "deadline ";
+        case 'D':
+            return "deadline ";
             //Fallthrough due to return
-            case 'E':
-                return "event ";
+        case 'E':
+            return "event ";
             //Fallthrough due to return
-            default:
-                //Returns nothing for traditional tasks. At this position, traditional tasks have
-                //ticks or crosses.
-                return "";
+        default:
+            //Returns nothing for traditional tasks. At this position, traditional tasks have
+            //ticks or crosses.
+            return "";
         }
     }
 
@@ -186,26 +186,26 @@ public class Storage {
         String commandType = Parser.parse(input);
 
         switch (commandType) {
-            case "DEADLINE":
-                listCount = TaskList.createDeadline(input, listCount, tasks, true);
-                break;
-            case "EVENT":
-                    listCount = TaskList.createEvent(input, listCount, tasks, true);
-                break;
-            case "TODO":
-                try {
-                    listCount = TaskList.createToDo(input, listCount, tasks, true);
-                } catch (InvalidCommandException e) {
-                    Ui.displayInvalidCommand();
-                }
-                break;
-            default:
-                try {
-                    listCount = TaskList.createTraditionalTask(input, listCount, tasks, true);
-                } catch (InvalidCommandException e) {
-                    Ui.displayInvalidCommand();
-                }
-                break;
+        case "DEADLINE":
+            listCount = TaskList.createDeadline(input, listCount, tasks, true);
+            break;
+        case "EVENT":
+            listCount = TaskList.createEvent(input, listCount, tasks, true);
+            break;
+        case "TODO":
+            try {
+                listCount = TaskList.createToDo(input, listCount, tasks, true);
+            } catch (InvalidCommandException e) {
+                Ui.displayInvalidCommand();
+            }
+            break;
+        default:
+            try {
+                listCount = TaskList.createTraditionalTask(input, listCount, tasks, true);
+            } catch (InvalidCommandException e) {
+                Ui.displayInvalidCommand();
+            }
+            break;
         }
         return listCount;
     }

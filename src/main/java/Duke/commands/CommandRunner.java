@@ -8,10 +8,10 @@ public class CommandRunner {
 
     /**
      * Takes the result from the parser and calls the TaskList functions appropriately.
-     * Does not handle addition of tasks, which is dea
-     * @param input
-     * @param commandType
-     * @param listCount
+     * Does not handle addition of tasks, which is dealt by taskRunner.
+     * @param input input by user.
+     * @param commandType type of command by parser.
+     * @param listCount 
      * @return
      */
     public static int commandRunner(String input, String commandType, int listCount) {
